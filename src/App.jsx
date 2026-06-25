@@ -1,9 +1,28 @@
 import "./App.css";
+import SearchBar from "./components/SearchBar";
 import milk from "./assets/milk.png"
 import dairy from "./assets/dairy products.png"
 import vegetable from "./assets/fresh vegetable.png"
 import fertilizer from "./assets/fertilizer.png"
 import logo from "./assets/logo.png"
+import cowmilk from "./assets/cowmilk.png";
+import buffalomilk from "./assets/buffalomilk.png";
+import CartRow from "./CartRow";
+
+import paneer from "./assets/paneer.png";
+import ghee from "./assets/ghee.png";
+import curd from "./assets/curd.png";
+import butter from "./assets/butter.png";
+
+import potato from "./assets/potato.png";
+import onion from "./assets/onion.png";
+import tomato from "./assets/tomato.png";
+import ginger from "./assets/ginger.png";
+
+import vermicompost from "./assets/vermicompost.png";
+import cowdung from "./assets/cowdung.png";
+import neemcake from "./assets/neemcake.png";
+import compost from "./assets/compost.png";
 import { useState } from "react";
 
 import Milk from "./Milk";
@@ -31,31 +50,53 @@ const [vermicompostCount, setVermicompostCount] = useState(0);
 const [cowDungCount, setCowDungCount] = useState(0);
 const [neemCakeCount, setNeemCakeCount] = useState(0);
 const [compostCount, setCompostCount] = useState(0);
-  const totalPrice =
-    rawMilkCount * 80 +
-    buffaloMilkCount * 90 +
-    paneerCount * 95 +
-    gheeCount * 600 +
-    curdCount * 30 +
-    butterCount * 300 +
-    potatoCount * 50 +
-    onionCount * 50 +
-    tomatoCount * 70 +
-    gingerCount * 30;
+const totalPrice =
+  rawMilkCount * 80 +
+  buffaloMilkCount * 90 +
+  paneerCount * 95 +
+  gheeCount * 600 +
+  curdCount * 30 +
+  butterCount * 300 +
+  potatoCount * 50 +
+  onionCount * 50 +
+  tomatoCount * 70 +
+  gingerCount * 30 +
+  vermicompostCount * 90 +
+  cowDungCount * 90 +
+  neemCakeCount * 100 +
+  compostCount * 100;
 const [name, setName] = useState("");
 const [mobile, setMobile] = useState("");
 const [address, setAddress] = useState("");
-
-const orderId = Math.floor(
-  1000 + Math.random() * 9000
+const [nameError, setNameError] = useState("");
+const [mobileError, setMobileError] = useState("");
+const [addressError, setAddressError] = useState("");
+const [paymentMethod, setPaymentMethod] = useState("cod");
+const [orderId] = useState(
+  () => Math.floor(1000 + Math.random() * 9000)
 );
 
-const filteredCards = [
-  { name: "Milk", page: "milk", image: milk },
-  { name: "Dairy", page: "dairy", image: dairy },
-  { name: "Vegetables", page: "vegetables", image: vegetable },
-  { name: "Fertilizer", page: "fertilizer", image: fertilizer }
-].filter((item) =>
+const products = [
+  { name: "Raw Milk", page: "milk", image: cowmilk },
+  { name: "Buffalo Milk", page: "milk", image: buffalomilk },
+
+  { name: "Paneer", page: "dairy", image: paneer },
+  { name: "Ghee", page: "dairy", image: ghee },
+  { name: "Curd", page: "dairy", image: curd },
+  { name: "White Butter", page: "dairy", image: butter },
+
+  { name: "Potato", page: "vegetables", image: potato },
+  { name: "Onion", page: "vegetables", image: onion },
+  { name: "Tomato", page: "vegetables", image: tomato },
+  { name: "Ginger", page: "vegetables", image: ginger },
+
+  { name: "Vermicompost", page: "fertilizer", image: vermicompost },
+  { name: "Cow Dung Manure", page: "fertilizer", image: cowdung },
+  { name: "Neem Cake", page: "fertilizer", image: neemcake },
+  { name: "Organic Compost", page: "fertilizer", image: compost },
+];
+
+const filteredProducts = products.filter((item) =>
   item.name.toLowerCase().includes(search.toLowerCase())
 );
 
@@ -147,8 +188,7 @@ if (page === "success") {
       <h3>Order ID: NF{orderId}</h3>
 <p>Mobile: {mobile}</p>
 <p>Address: {address}</p>
-      <p>Total Items: {cartCount}</p>
-      <p>Total Amount: ₹{totalPrice}</p>
+     
 
       <button
   onClick={() => {
@@ -188,6 +228,117 @@ if (page === "checkout") {
       </button>
 
       <h1>📦 Checkout</h1>
+      <div className="order-info">
+
+  <div className="info-item">
+    <span>🆔 Order ID</span>
+    <strong>NF{orderId}</strong>
+  </div>
+
+  <div className="info-item">
+    <span>🗓️ Date</span>
+    <strong>
+      {new Date().toLocaleDateString("en-IN", {
+        day: "2-digit",
+        month: "long",
+        year: "numeric",
+      })}
+    </strong>
+  </div>
+
+  
+
+</div>
+      <p className="order-date">
+        <div className="order-info">
+  
+
+  <div className="info-item">
+    <span>⏰ Order Time</span>
+    <strong>
+      {new Date().toLocaleTimeString("en-IN", {
+        hour: "2-digit",
+        minute: "2-digit",
+      })}
+    </strong>
+  </div>
+</div>
+  
+</p>
+<div className="checkout-box">
+<div className="order-summary">
+<div className="payment-box">
+
+  <h2>💳 Payment Method</h2>
+
+  <label>
+    <input
+      type="radio"
+      value="cod"
+      checked={paymentMethod === "cod"}
+      onChange={(e) => setPaymentMethod(e.target.value)}
+    />
+    Cash on Delivery
+  </label>
+
+  <label>
+    <input
+      type="radio"
+      value="upi"
+      checked={paymentMethod === "upi"}
+      onChange={(e) => setPaymentMethod(e.target.value)}
+    />
+    UPI Payment
+  </label>
+
+  <label>
+    <input
+      type="radio"
+      value="qr"
+      checked={paymentMethod === "qr"}
+      onChange={(e) => setPaymentMethod(e.target.value)}
+    />
+    Scan QR Code
+  </label>
+
+</div>
+  <h2>🧾 Order Summary</h2>
+
+  <div className="summary-row">
+    <span>Total Items</span>
+    <span>{cartCount}</span>
+  </div>
+
+  <div className="summary-row">
+    <span>Subtotal</span>
+    <span>₹{totalPrice}</span>
+  </div>
+
+  <div className="summary-row">
+    <span>Delivery Charges</span>
+
+    <span>
+      {totalPrice >= 500 ? "FREE" : "₹40"}
+    </span>
+  </div>
+
+  <hr />
+
+  <div className="summary-row total-row">
+
+    <span>Grand Total</span>
+
+    <span>
+
+      ₹{totalPrice >= 500 ? totalPrice : totalPrice + 40}
+
+    </span>
+
+  </div>
+
+</div>
+<h2>👤 Customer Information</h2>
+
 
 
 <br /><br />
@@ -198,8 +349,8 @@ if (page === "checkout") {
   value={name}
   onChange={(e) => setName(e.target.value)}
 />
+{nameError && <p className="error-text">{nameError}</p>}
 
-<br /><br />
 
 <input
   type="tel"
@@ -207,8 +358,8 @@ if (page === "checkout") {
   value={mobile}
   onChange={(e) => setMobile(e.target.value)}
 />
+{mobileError && <p className="error-text">{mobileError}</p>}
 
-<br /><br />
 
 <textarea
   placeholder="Enter Delivery Address"
@@ -217,46 +368,61 @@ if (page === "checkout") {
   value={address}
   onChange={(e) => setAddress(e.target.value)}
 ></textarea>
+{addressError && <p className="error-text">{addressError}</p>}
+</div>
+<div className="order-summary">
 
-<br /><br />
+ 
+  
 
-<h2>Total Amount: ₹{totalPrice}</h2>
-<h2>Total Items: {cartCount}</h2>
+  
+
+</div>
+
 
 <button
   onClick={() => {
-    if (
-      name.trim() === "" ||
-      mobile.trim() === "" ||
-      address.trim() === ""
-    ) {
-      alert("Please fill all details");
-      return;
-    }
+   if (name.trim().length < 3) {
+  alert("Please enter a valid name");
+  return;
+}
 
+if (!/^[0-9]{10}$/.test(mobile)) {
+  alert("Please enter a valid 10-digit mobile number");
+  return;
+}
+
+if (address.trim().length < 15) {
+  alert("Please enter a complete delivery address");
+  return;
+}
+const orderItems = `
+${rawMilkCount > 0 ? `🥛 Raw Milk: ${rawMilkCount}\n` : ""}
+${buffaloMilkCount > 0 ? `🐃 Buffalo Milk: ${buffaloMilkCount}\n` : ""}
+
+${paneerCount > 0 ? `🧀 Paneer: ${paneerCount}\n` : ""}
+${curdCount > 0 ? `🥣 Curd: ${curdCount}\n` : ""}
+${butterCount > 0 ? `🧈 Butter: ${butterCount}\n` : ""}
+${gheeCount > 0 ? `🫙 Ghee: ${gheeCount}\n` : ""}
+
+${potatoCount > 0 ? `🥔 Potato: ${potatoCount}\n` : ""}
+${onionCount > 0 ? `🧅 Onion: ${onionCount}\n` : ""}
+${tomatoCount > 0 ? `🍅 Tomato: ${tomatoCount}\n` : ""}
+${gingerCount > 0 ? `🫚 Ginger: ${gingerCount}\n` : ""}
+
+${vermicompostCount > 0 ? `🌱 Vermicompost: ${vermicompostCount}\n` : ""}
+${cowDungCount > 0 ? `🐄 Cow Dung: ${cowDungCount}\n` : ""}
+${neemCakeCount > 0 ? `🌿 Neem Cake: ${neemCakeCount}\n` : ""}
+${compostCount > 0 ? `♻️ Organic Compost: ${compostCount}\n` : ""}
+`;
     const message = `
 🛒 New Order - Order details
 🆔 Order ID: NF${orderId}
 👤 Name: ${name}
 📞 Mobile: ${mobile}
-
-🥛 Raw Milk: ${rawMilkCount}
-🐃 Buffalo Milk: ${buffaloMilkCount}
-
-🧀 Paneer: ${paneerCount}
-🥣 Curd: ${curdCount}
-🧈 Butter: ${butterCount}
-
-🥔 Potato: ${potatoCount}
-🧅 Onion: ${onionCount}
-🍅 Tomato: ${tomatoCount}
-🫚 Ginger: ${gingerCount}
-
-🌱 Vermicompost: ${vermicompostCount}
-🐄 Cow Dung: ${cowDungCount}
-🌿 Neem Cake: ${neemCakeCount}
-♻️ Compost: ${compostCount}
-
+💳 Payment Method: ${paymentMethod.toUpperCase()}
+🛍️ Order Items:
+${orderItems}
 💰 Total Amount: ₹${totalPrice}
 
 📍 Address:
@@ -304,105 +470,178 @@ if (page === "cart") {
 
       <div className="cart-box">
 
-        {rawMilkCount > 0 && (
-          <div className="cart-item">
-            <span>🥛 Raw Milk × {rawMilkCount}</span>
-            <span>₹{rawMilkCount * 80}</span>
-          </div>
-        )}
+        <CartRow
+  emoji="🥛"
+  name="Raw Milk"
+  price={80}
+  count={rawMilkCount}
+  setCount={setRawMilkCount}
+  cartCount={cartCount}
+  setCartCount={setCartCount}
+/>
+        <CartRow
+  emoji="🐃"
+  name="Buffalo Milk"
+  price={90}
+  count={buffaloMilkCount}
+  setCount={setBuffaloMilkCount}
+  cartCount={cartCount}
+  setCartCount={setCartCount}
+/>
+      <CartRow
+  emoji="🧀"
+  name="Paneer"
+  price={95}
+  count={paneerCount}
+  setCount={setPaneerCount}
+  cartCount={cartCount}
+  setCartCount={setCartCount}
+/>
 
-        {buffaloMilkCount > 0 && (
-          <div className="cart-item">
-            <span>🐃 Buffalo Milk × {buffaloMilkCount}</span>
-            <span>₹{buffaloMilkCount * 90}</span>
-          </div>
-        )}
+        <CartRow
+  emoji="🥣"
+  name="Curd"
+  price={30}
+  count={curdCount}
+  setCount={setCurdCount}
+  cartCount={cartCount}
+  setCartCount={setCartCount}
+/>
 
-        {paneerCount > 0 && (
-          <div className="cart-item">
-            <span>🧀 Paneer × {paneerCount}</span>
-            <span>₹{paneerCount * 95}</span>
-          </div>
-        )}
+        <CartRow
+  emoji="🧈"
+  name="White Butter"
+  price={300}
+  count={butterCount}
+  setCount={setButterCount}
+  cartCount={cartCount}
+  setCartCount={setCartCount}
+/>
 
-        {curdCount > 0 && (
-          <div className="cart-item">
-            <span>🥣 Curd × {curdCount}</span>
-            <span>₹{curdCount * 30}</span>
-          </div>
-        )}
+       <CartRow
+  emoji="🥔"
+  name="Potato"
+  price={50}
+  count={potatoCount}
+  setCount={setPotatoCount}
+  cartCount={cartCount}
+  setCartCount={setCartCount}
+/>
 
-        {butterCount > 0 && (
-          <div className="cart-item">
-            <span>🧈 White Butter × {butterCount}</span>
-            <span>₹{butterCount * 300}</span>
-          </div>
-        )}
+        <CartRow
+  emoji="🧅"
+  name="Onion"
+  price={50}
+  count={onionCount}
+  setCount={setOnionCount}
+  cartCount={cartCount}
+  setCartCount={setCartCount}
+/>
 
-        {potatoCount > 0 && (
-          <div className="cart-item">
-            <span>🥔 Potato × {potatoCount}</span>
-            <span>₹{potatoCount * 50}</span>
-          </div>
-        )}
+        <CartRow
+  emoji="🍅"
+  name="Tomato"
+  price={70}
+  count={tomatoCount}
+  setCount={setTomatoCount}
+  cartCount={cartCount}
+  setCartCount={setCartCount}
+/>
+        <CartRow
+  emoji="🫚"
+  name="Ginger"
+  price={30}
+  count={gingerCount}
+  setCount={setGingerCount}
+  cartCount={cartCount}
+  setCartCount={setCartCount}
+/>
 
-        {onionCount > 0 && (
-          <div className="cart-item">
-            <span>🧅 Onion × {onionCount}</span>
-            <span>₹{onionCount * 50}</span>
-          </div>
-        )}
+        <CartRow
+  emoji="🌱"
+  name="Vermicompost"
+  price={90}
+  count={vermicompostCount}
+  setCount={setVermicompostCount}
+  cartCount={cartCount}
+  setCartCount={setCartCount}
+/>
 
-        {tomatoCount > 0 && (
-          <div className="cart-item">
-            <span>🍅 Tomato × {tomatoCount}</span>
-            <span>₹{tomatoCount * 70}</span>
-          </div>
-        )}
+        <CartRow
+  emoji="🐄"
+  name="Cow Dung Manure"
+  price={90}
+  count={cowDungCount}
+  setCount={setCowDungCount}
+  cartCount={cartCount}
+  setCartCount={setCartCount}
+/>
 
-        {gingerCount > 0 && (
-          <div className="cart-item">
-            <span>🫚 Ginger × {gingerCount}</span>
-            <span>₹{gingerCount * 30}</span>
-          </div>
-        )}
+        <CartRow
+  emoji="🌿"
+  name="Neem Cake"
+  price={100}
+  count={neemCakeCount}
+  setCount={setNeemCakeCount}
+  cartCount={cartCount}
+  setCartCount={setCartCount}
+/>
 
-        {vermicompostCount > 0 && (
-          <div className="cart-item">
-            <span>🌱 Vermicompost × {vermicompostCount}</span>
-            <span>₹{vermicompostCount * 90}</span>
-          </div>
-        )}
-
-        {cowDungCount > 0 && (
-          <div className="cart-item">
-            <span>🐄 Cow Dung Manure × {cowDungCount}</span>
-            <span>₹{cowDungCount * 90}</span>
-          </div>
-        )}
-
-        {neemCakeCount > 0 && (
-          <div className="cart-item">
-            <span>🌿 Neem Cake × {neemCakeCount}</span>
-            <span>₹{neemCakeCount * 100}</span>
-          </div>
-        )}
-
-        {compostCount > 0 && (
-          <div className="cart-item">
-            <span>♻️ Organic Compost × {compostCount}</span>
-            <span>₹{compostCount * 100}</span>
-          </div>
-        )}
+        <CartRow
+  emoji="♻️"
+  name="Organic Compost"
+  price={100}
+  count={compostCount}
+  setCount={setCompostCount}
+  cartCount={cartCount}
+  setCartCount={setCartCount}
+/>
 
         {cartCount === 0 && (
           <h2>Your Cart is Empty 🛒</h2>
         )}
 
-        <div className="total-box">
-          <h2>Total Items: {cartCount}</h2>
-          <h2>Total Amount: ₹{totalPrice}</h2>
-        </div>
+        <div className="order-summary">
+
+  <h2>🧾 Order Summary</h2>
+
+  <div className="summary-row">
+    <span>Total Items</span>
+    <span>{cartCount}</span>
+  </div>
+
+  <div className="summary-row">
+    <span>Subtotal</span>
+    <span>₹{totalPrice}</span>
+  </div>
+
+  <div className="summary-row">
+    <span>Delivery Charges</span>
+    <span>
+      {cartCount === 0
+        ? "₹0"
+        : totalPrice >= 500
+        ? "FREE"
+        : "₹40"}
+    </span>
+  </div>
+
+  <hr />
+
+  <div className="summary-row total-row">
+    <span>Grand Total</span>
+    <span>
+      ₹{
+        cartCount === 0
+          ? 0
+          : totalPrice >= 500
+          ? totalPrice
+          : totalPrice + 40
+      }
+    </span>
+  </div>
+
+</div>
 
         {cartCount > 0 && (
           <button
@@ -457,30 +696,70 @@ if (page === "cart") {
 </button>
 </nav>
 
-<div className="search-bar">
-  <input
-  type="text"
-  placeholder="Search Products..."
-  value={search}
-  onChange={(e) => setSearch(e.target.value)}
+<SearchBar
+  search={search}
+  setSearch={setSearch}
 />
-</div>
 
 
       <section className="hero">
         <section className="products">
 
- {filteredCards.map((item) => (
-  <div className="card" key={item.name}>
-    <img src={item.image} alt={item.name} />
+ {search === "" ? (
 
-    <h3>{item.name}</h3>
+  <>
+    <div className="card">
+      <img src={milk} alt="Milk" />
+      <h3>Fresh Milk</h3>
 
-    <button onClick={() => setPage(item.page)}>
-      View Products
-    </button>
-  </div>
-))}
+      <button onClick={() => setPage("milk")}>
+        View Products
+      </button>
+    </div>
+
+    <div className="card">
+      <img src={dairy} alt="Dairy" />
+      <h3>Dairy Products</h3>
+
+      <button onClick={() => setPage("dairy")}>
+        View Products
+      </button>
+    </div>
+
+    <div className="card">
+      <img src={vegetable} alt="Vegetables" />
+      <h3>Fresh Vegetables</h3>
+
+      <button onClick={() => setPage("vegetables")}>
+        View Products
+      </button>
+    </div>
+
+    <div className="card">
+      <img src={fertilizer} alt="Fertilizer" />
+      <h3>Organic Fertilizer</h3>
+
+      <button onClick={() => setPage("fertilizer")}>
+        View Products
+      </button>
+    </div>
+  </>
+
+) : (
+
+  filteredProducts.map((item) => (
+    <div className="card" key={item.name}>
+      <img src={item.image} alt={item.name} />
+
+      <h3>{item.name}</h3>
+
+      <button onClick={() => setPage(item.page)}>
+        View Product
+      </button>
+    </div>
+  ))
+
+)}
 
   
 

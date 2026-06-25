@@ -39,8 +39,8 @@ function Fertilizer({
           <button
             onClick={() => {
               if (vermicompostCount > 0) {
-                setVermicompostCount(vermicompostCount - 1);
-                setCartCount(cartCount - 1);
+                setVermicompostCount(vermicompostCount + 1);
+                setCartCount(cartCount + 1);
               }
             }}
           >
@@ -52,13 +52,28 @@ function Fertilizer({
           </span>
 
           <button
-            onClick={() => {
-              setVermicompostCount(vermicompostCount + 1);
-              setCartCount(cartCount + 1);
-            }}
-          >
-            +
-          </button>
+  onClick={() => {
+    if (vermicompostCount > 0) {
+      setVermicompostCount(vermicompostCount - 1);
+      setCartCount(cartCount - 1);
+    }
+  }}
+>
+  -
+</button>
+
+<span style={{ margin: "0 10px" }}>
+  {vermicompostCount}
+</span>
+
+<button
+  onClick={() => {
+    setVermicompostCount(vermicompostCount + 1);
+    setCartCount(cartCount + 1);
+  }}
+>
+  +
+</button>
         </div>
       </div>
 
@@ -70,8 +85,8 @@ function Fertilizer({
           <button
             onClick={() => {
               if (cowDungCount > 0) {
-                setCowDungCount(cowDungCount - 1);
-                setCartCount(cartCount - 1);
+                setCowDungCount(cowDungCount + 1);
+                setCartCount(cartCount + 1);
               }
             }}
           >
