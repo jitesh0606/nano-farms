@@ -1,5 +1,9 @@
 import "./App.css";
+import Login from "./components/Login";
 import SearchBar from "./components/SearchBar";
+import supabase from "./lib/supabase";
+import Admin from "./components/Admin";
+import TrackOrder from "./components/TrackOrder";
 import milk from "./assets/milk.png"
 import dairy from "./assets/dairy products.png"
 import vegetable from "./assets/fresh vegetable.png"
@@ -23,7 +27,7 @@ import vermicompost from "./assets/vermicompost.png";
 import cowdung from "./assets/cowdung.png";
 import neemcake from "./assets/neemcake.png";
 import compost from "./assets/compost.png";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import Milk from "./Milk";
 import Dairy from "./Dairy";
@@ -34,6 +38,18 @@ import Fertilizer from "./Fertilizer";
   function App() {
 
   const [page, setPage] = useState("home");
+  const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(false);
+  useEffect(() => {
+  async function checkSession() {
+    const { data } = await supabase.auth.getSession();
+
+    if (data.session) {
+      setIsAdminLoggedIn(true);
+    }
+  }
+
+  checkSession();
+}, []);
   const [search, setSearch] = useState("");
   const [cartCount, setCartCount] = useState(0);
   const [rawMilkCount, setRawMilkCount] = useState(0);
@@ -72,10 +88,7 @@ const [nameError, setNameError] = useState("");
 const [mobileError, setMobileError] = useState("");
 const [addressError, setAddressError] = useState("");
 const [paymentMethod, setPaymentMethod] = useState("cod");
-const [orderId] = useState(
-  () => Math.floor(1000 + Math.random() * 9000)
-);
-
+const [orderNumber, setOrderNumber] = useState("");
 const products = [
   { name: "Raw Milk", page: "milk", image: cowmilk },
   { name: "Buffalo Milk", page: "milk", image: buffalomilk },
@@ -181,11 +194,11 @@ if (page === "success") {
   return (
     <div className="product-page">
       <h1>✅ Order Placed Successfully</h1>
-<h3>Order ID: NF{orderId}</h3>
+<h3>Order ID: {orderNumber}</h3>
 
 <p>Order Date: {new Date().toLocaleString()}</p>
       <h2>Thank You For Shopping With Nano Farms</h2>
-      <h3>Order ID: NF{orderId}</h3>
+     
 <p>Mobile: {mobile}</p>
 <p>Address: {address}</p>
      
@@ -232,7 +245,7 @@ if (page === "checkout") {
 
   <div className="info-item">
     <span>🆔 Order ID</span>
-    <strong>NF{orderId}</strong>
+    <strong>{orderNumber}</strong>
   </div>
 
   <div className="info-item">
@@ -249,7 +262,7 @@ if (page === "checkout") {
   
 
 </div>
-      <p className="order-date">
+      <div className="order-date">
         <div className="order-info">
   
 
@@ -264,7 +277,7 @@ if (page === "checkout") {
   </div>
 </div>
   
-</p>
+</div>
 <div className="checkout-box">
 <div className="order-summary">
 <div className="payment-box">
@@ -381,7 +394,7 @@ if (page === "checkout") {
 
 
 <button
-  onClick={() => {
+  onClick={async () => {
    if (name.trim().length < 3) {
   alert("Please enter a valid name");
   return;
@@ -415,9 +428,51 @@ ${cowDungCount > 0 ? `🐄 Cow Dung: ${cowDungCount}\n` : ""}
 ${neemCakeCount > 0 ? `🌿 Neem Cake: ${neemCakeCount}\n` : ""}
 ${compostCount > 0 ? `♻️ Organic Compost: ${compostCount}\n` : ""}
 `;
+
+
+
+const grandTotal =
+  totalPrice >= 500 ? totalPrice : totalPrice + 40;
+
+const products = {
+  rawMilk: rawMilkCount,
+  buffaloMilk: buffaloMilkCount,
+  paneer: paneerCount,
+  ghee: gheeCount,
+  curd: curdCount,
+  butter: butterCount,
+  potato: potatoCount,
+  onion: onionCount,
+  tomato: tomatoCount,
+  ginger: gingerCount,
+  vermicompost: vermicompostCount,
+  cowDung: cowDungCount,
+  neemCake: neemCakeCount,
+  compost: compostCount,
+};
+const { data, error } = await supabase
+  .from("orders")
+  .insert([
+    {
+      customer_name: name,
+      mobile: mobile,
+      address: address,
+      products: products,
+      total: grandTotal,
+      payment_method: paymentMethod,
+    },
+  ])
+  .select();
+
+if (error) {
+ console.log(error);
+alert(error.message);
+  return;
+}
+setOrderNumber(data[0].order_number);
     const message = `
 🛒 New Order - Order details
-🆔 Order ID: NF${orderId}
+🆔 Order ID: ${orderNumber}
 👤 Name: ${name}
 📞 Mobile: ${mobile}
 💳 Payment Method: ${paymentMethod.toUpperCase()}
@@ -442,6 +497,33 @@ ${address}
   Place Order
 </button>
     </div>
+  );
+}
+if (page === "admin") {
+
+  if (!isAdminLoggedIn) {
+    return (
+      <Login
+        goHome={() => setPage("home")}
+        onLogin={() => {
+          setIsAdminLoggedIn(true);
+          setPage("admin");
+        }}
+      />
+    );
+  }
+
+  return (
+    <Admin
+      goHome={() => setPage("home")}
+    />
+  );
+}
+if (page === "track") {
+  return (
+    <TrackOrder
+      goHome={() => setPage("home")}
+    />
   );
 }
 if(page === "contact"){
@@ -693,6 +775,12 @@ if (page === "cart") {
   
   <button onClick={() => setPage("contact")}>
   Contact
+</button>
+<button onClick={() => setPage("admin")}>
+  Admin
+</button>
+<button onClick={() => setPage("track")}>
+  Track Order
 </button>
 </nav>
 
