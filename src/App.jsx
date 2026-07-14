@@ -2,6 +2,7 @@ import "./App.css";
 import "./styles/Cart.css";
 import "./styles/Checkout.css";
 import "./styles/Success.css";
+import "./styles/products.css";
 import Navbar from "./components/Navbar";
 import Login from "./components/Login";
 import SearchBar from "./components/SearchBar";
@@ -858,7 +859,7 @@ if (page === "cart") {
   </button>
 
   <button onClick={() => setPage("contact")}>
-     Contact
+     👉☎️Contact
   </button>
 
   <button
@@ -903,93 +904,184 @@ if (page === "cart") {
   setSearch={setSearch}
 />
 
+<div className="home-content">
 
-        <div className="home-content">
-        <section className="products">
+ <div className="category-heading">
 
- {search === "" ? (
+  <span className="leaf">🌿</span>
 
-  <>
-  
-    <div className="card">
-      <img src={milk} alt="Milk" />
-      <h3>Fresh Milk</h3>
-
-      <button onClick={() => setPage("milk")}>
-        View Products
-      </button>
-    </div>
-
-    <div className="card">
-      <img src={dairy} alt="Dairy" />
-      <h3>Dairy Products</h3>
-
-      <button onClick={() => setPage("dairy")}>
-        View Products
-      </button>
-    </div>
-
-    <div className="card">
-      <img src={vegetable} alt="Vegetables" />
-      <h3>Fresh Vegetables</h3>
-
-      <button onClick={() => setPage("vegetables")}>
-        View Products
-      </button>
-    </div>
-
-    <div className="card">
-      <img src={fertilizer} alt="Fertilizer" />
-      <h3>Organic Fertilizer</h3>
-
-      <button onClick={() => setPage("fertilizer")}>
-        View Products
-      </button>
-    </div>
-  </>
-
-) : (
-
-  filteredProducts.map((item) => (
-    <div className="card" key={item.name}>
-      <img src={item.image} alt={item.name} />
-
-      <h3>{item.name}</h3>
-
-      <button onClick={() => setPage(item.page)}>
-        View Product
-      </button>
-    </div>
-  ))
-
-)}
-
-  
-
-</section>
-</div>
-        <h2>Pure & Natural Farm Products</h2>
-
-        <p>
-          Fresh Milk • Dairy Products • Vegetables • Organic Fertilizers
-        </p>
-
-        
-      
-     <footer>
-  <h3>Nano Farms 🌱</h3>
-  <p>Fresh Farm Products Delivered To Your Doorstep</p>
-  <p>📞 +91 9837369626</p>
-</footer>
-<section className="about">
-  <h2>About Nano Farms</h2>
+  <h2>Explore Our Categories</h2>
 
   <p>
-    Nano Farms provides fresh milk, dairy products,
-    vegetables and organic fertilizers directly from farms
-    to customers.
+    Fresh • Organic • Healthy • Direct From Farm
   </p>
+
+</div>
+
+  <section className="products">
+
+    {search === "" ? (
+
+      <>
+
+        <div className="card">
+
+          <div className="card-image">
+            <img src={milk} alt="Milk" />
+          </div>
+
+          <div className="card-content">
+            <h3>🥛 Fresh Milk</h3>
+
+            <p>
+              Pure cow & buffalo milk delivered fresh from our farms.
+            </p>
+
+            <button onClick={() => setPage("milk")}>
+              View Products →
+            </button>
+          </div>
+
+        </div>
+
+        <div className="card">
+
+          <div className="card-image">
+            <img src={dairy} alt="Dairy Products" />
+          </div>
+
+          <div className="card-content">
+            <h3>🧀 Dairy Products</h3>
+
+            <p>
+              Fresh paneer, curd, butter and ghee made naturally.
+            </p>
+
+            <button onClick={() => setPage("dairy")}>
+              View Products →
+            </button>
+          </div>
+
+        </div>
+
+        <div className="card">
+
+          <div className="card-image">
+            <img src={vegetable} alt="Vegetables" />
+          </div>
+
+          <div className="card-content">
+            <h3>🥬 Fresh Vegetables</h3>
+
+            <p>
+              Farm-picked vegetables delivered directly to you.
+            </p>
+
+            <button onClick={() => setPage("vegetables")}>
+              View Products →
+            </button>
+          </div>
+
+        </div>
+
+        <div className="card">
+
+          <div className="card-image">
+            <img src={fertilizer} alt="Fertilizer" />
+          </div>
+
+          <div className="card-content">
+            <h3>🌱 Organic Fertilizer</h3>
+
+            <p>
+              Premium organic fertilizers for healthy farming.
+            </p>
+
+            <button onClick={() => setPage("fertilizer")}>
+              View Products →
+            </button>
+          </div>
+
+        </div>
+
+      </>
+
+    ) : (
+
+      filteredProducts.map((item) => (
+
+        <div className="card" key={item.name}>
+
+          <div className="card-image">
+            <img src={item.image} alt={item.name} />
+          </div>
+
+          <div className="card-content">
+
+            <h3>{item.name}</h3>
+
+            <p>
+              Premium quality farm fresh product from Nano Farms.
+            </p>
+
+            <button onClick={() => setPage(item.page)}>
+              View Product →
+            </button>
+
+          </div>
+
+        </div>
+
+      ))
+
+    )}
+
+  </section>
+
+</div>
+<section className="about">
+
+<h2>🌿 About Nano Farms</h2>
+
+<p className="about-text">
+Nano Farms provides fresh milk, dairy products, vegetables and organic fertilizers directly from trusted farms to your doorstep.
+</p>
+
+<div className="about-features">
+
+<div className="about-card">
+<div className="about-icon">🌱</div>
+<h3>100% Organic</h3>
+<p>Healthy and chemical-free farm products.</p>
+</div>
+
+<div className="about-card">
+<div className="about-icon">🚚</div>
+<h3>Fast Delivery</h3>
+<p>Fresh products delivered quickly to your doorstep.</p>
+</div>
+
+<div className="about-card">
+<div className="about-icon">⭐</div>
+<h3>Premium Quality</h3>
+<p>Freshly harvested products with guaranteed quality.</p>
+</div>
+
+</div>
+
 </section>
+
+<footer className="footer">
+
+  <h2>Nano Farms 🌿</h2>
+
+  <p>Fresh Farm Products Delivered To Your Doorstep</p>
+
+  <p>📞 +91 9837369626</p>
+
+  <p>© 2026 Nano Farms. All Rights Reserved.</p>
+
+</footer>
     </>
   );
 }

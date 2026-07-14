@@ -1,23 +1,45 @@
 .products{
-    display:grid !important;
+
+    width:100%;
+
+    display:grid;
+
     grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
 
-    gap:35px;
+    gap:30px;
 
-    margin-top:60px;
+    padding:20px 6% 80px;
+
 }
 
-.card {
-  background: #fff;
-  border-radius: 24px;
-  overflow: hidden;
-  box-shadow: 0 12px 30px rgba(0,0,0,0.08);
-  transition: all .35s ease;
+.card{
+
+    background:#ffffff;
+
+    border-radius:28px;
+
+    overflow:hidden;
+
+    border:1px solid rgba(0,0,0,.06);
+
+    box-shadow:
+    0 12px 35px rgba(0,0,0,.08);
+
+    transition:.35s;
+
+    display:flex;
+
+    flex-direction:column;
+
 }
 
-.card:hover {
-  transform: translateY(-12px) scale(1.02);
-  box-shadow: 0 20px 45px rgba(0,0,0,.15);
+.card:hover{
+
+    transform:translateY(-12px);
+
+    box-shadow:
+    0 25px 60px rgba(22,163,74,.15);
+
 }
 
 .card img{
@@ -28,47 +50,210 @@
 
     object-fit:cover;
 
-    border-radius:15px;
+    background:#f5f5f5;
+
 }
 
 .card h3{
 
-    margin:20px 0;
+    margin-top:22px;
 
     font-size:24px;
 
-    color:#222;
+    color:#1d2939;
+
+    text-align:center;
+
+}
+
+.card p{
+
+    color:#667085;
+
+    font-size:15px;
+
+    text-align:center;
+
+    margin:12px 20px;
+
+    line-height:1.6;
+
+    flex:1;
+
 }
 
 .card button{
-  background:#16a34a;
-  border-radius:12px;
-  font-weight:600;
+
+    width:calc(100% - 40px);
+
+    margin:25px 20px 22px;
+
+    padding:16px;
+
+    border:none;
+
+    border-radius:18px;
+
+    background:linear-gradient(135deg,#14532d,#22c55e);
+
+    color:white;
+
+    font-size:17px;
+
+    font-weight:700;
+
+    cursor:pointer;
+
+    transition:.3s;
+
 }
 
 .card button:hover{
-  background:#15803d;
-}
-.section-title{
 
-    text-align:center;
+    transform:scale(1.03);
 
-    font-size:42px;
+    background:linear-gradient(135deg,#0f3f21,#15803d);
 
-    margin-top:70px;
-
-    color:#1f2937;
 }
 
-.section-subtitle{
 
-    text-align:center;
 
-    color:#666;
+/* ===========================
+      TABLET
+=========================== */
 
-    font-size:20px;
+@media(max-width:992px){
 
-    margin-top:15px;
+.products{
 
-    margin-bottom:50px;
+grid-template-columns:repeat(2,1fr);
+
+gap:20px;
+
+}
+
+}
+
+
+
+/* ===========================
+      MOBILE
+=========================== */
+
+@media(max-width:768px){
+
+.products{
+
+grid-template-columns:repeat(2,1fr) !important;
+
+gap:12px;
+
+padding:15px;
+
+}
+
+.card{
+
+border-radius:18px;
+
+}
+
+.card img{
+
+height:105px;
+
+object-fit:contain;
+
+padding:8px;
+
+background:white;
+
+}
+
+.card h3{
+
+font-size:15px;
+
+margin-top:8px;
+
+padding:0 8px;
+
+}
+
+.card p{
+
+font-size:11px;
+
+line-height:1.4;
+
+margin:8px 10px;
+
+}
+
+.card button{
+
+width:calc(100% - 18px);
+
+margin:10px 9px 10px;
+
+padding:10px;
+
+font-size:12px;
+
+border-radius:12px;
+
+background:linear-gradient(135deg,#14532d,#22c55e);
+
+color:white;
+
+font-weight:700;
+
+}
+
+}
+
+
+
+/* ===========================
+    SMALL PHONES
+=========================== */
+
+@media(max-width:480px){
+
+.products{
+
+grid-template-columns:repeat(2,1fr) !important;
+
+gap:10px;
+
+padding:10px;
+
+}
+
+.card img{
+
+height:90px;
+
+}
+
+.card h3{
+
+font-size:13px;
+
+}
+
+.card p{
+
+display:none;
+
+}
+
+.card button{
+
+font-size:11px;
+
+padding:9px;
+
+}
+
 }
