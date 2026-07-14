@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import supabase from "../lib/supabase";
-
+import "../styles/TrackOrder.css";
 function TrackOrder({ goHome }) {
   const [mobile, setMobile] = useState("");
   const [orders, setOrders] = useState([]);

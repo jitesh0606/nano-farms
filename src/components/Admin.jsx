@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import supabase from "../lib/supabase";
-
+import "../styles/Admin.css";
 function Admin({ goHome }) {
 
 console.log("ADMIN COMPONENT LOADED");

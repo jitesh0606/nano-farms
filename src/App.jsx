@@ -1,4 +1,8 @@
 import "./App.css";
+import "./styles/Cart.css";
+import "./styles/Checkout.css";
+import "./styles/Success.css";
+import Navbar from "./components/Navbar";
 import Login from "./components/Login";
 import SearchBar from "./components/SearchBar";
 import supabase from "./lib/supabase";
@@ -36,7 +40,7 @@ import Fertilizer from "./Fertilizer";
 
 
   function App() {
-
+const [menuOpen, setMenuOpen] = useState(false);
   const [page, setPage] = useState("home");
   const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(false);
   useEffect(() => {
@@ -193,208 +197,287 @@ if (page === "fertilizer") {
 if (page === "success") {
   return (
     <div className="product-page">
-      <h1>✅ Order Placed Successfully</h1>
-<h3>Order ID: {orderNumber}</h3>
 
-<p>Order Date: {new Date().toLocaleString()}</p>
-      <h2>Thank You For Shopping With Nano Farms</h2>
-     
-<p>Mobile: {mobile}</p>
-<p>Address: {address}</p>
-     
+      <div className="success-card">
 
-      <button
-  onClick={() => {
-    setCartCount(0);
+        <div className="success-icon">
+          ✅
+        </div>
 
-    setRawMilkCount(0);
-    setBuffaloMilkCount(0);
+        <h1 className="success-title">
+          Order Placed Successfully
+        </h1>
 
-    setPaneerCount(0);
-    setGheeCount(0);
-    setCurdCount(0);
-    setButterCount(0);
+        <p className="success-subtitle">
+          Thank you for shopping with <b>Nano Farms</b> 🌿
+        </p>
 
-    setPotatoCount(0);
-    setOnionCount(0);
-    setTomatoCount(0);
-    setGingerCount(0);
+        <div className="success-details">
 
-    setVermicompostCount(0);
-    setCowDungCount(0);
-    setNeemCakeCount(0);
-    setCompostCount(0);
+          <div className="detail-row">
+            <div className="detail-label">
+              🆔 Order ID
+            </div>
+            <div className="detail-value">
+              {orderNumber}
+            </div>
+          </div>
 
-    setPage("home");
-  }}
->
-  Back To Home
-</button>
+          <div className="detail-row">
+            <div className="detail-label">
+              📅 Date
+            </div>
+            <div className="detail-value">
+              {new Date().toLocaleDateString("en-IN",{
+                day:"2-digit",
+                month:"long",
+                year:"numeric",
+              })}
+            </div>
+          </div>
+
+          <div className="detail-row">
+            <div className="detail-label">
+              🕒 Time
+            </div>
+            <div className="detail-value">
+              {new Date().toLocaleTimeString("en-IN",{
+                hour:"2-digit",
+                minute:"2-digit",
+              })}
+            </div>
+          </div>
+
+          <div className="detail-row">
+            <div className="detail-label">
+              📱 Mobile
+            </div>
+            <div className="detail-value">
+              {mobile}
+            </div>
+          </div>
+
+          <div className="detail-row">
+            <div className="detail-label">
+              📍 Address
+            </div>
+            <div className="detail-value address-value">
+              {address}
+            </div>
+          </div>
+
+        </div>
+
+        <div className="success-buttons">
+
+          <button
+            className="home-btn"
+            onClick={() => {
+
+              setCartCount(0);
+
+              setRawMilkCount(0);
+              setBuffaloMilkCount(0);
+
+              setPaneerCount(0);
+              setGheeCount(0);
+              setCurdCount(0);
+              setButterCount(0);
+
+              setPotatoCount(0);
+              setOnionCount(0);
+              setTomatoCount(0);
+              setGingerCount(0);
+
+              setVermicompostCount(0);
+              setCowDungCount(0);
+              setNeemCakeCount(0);
+              setCompostCount(0);
+
+              setPage("home");
+
+            }}
+          >
+            🏠 Back To Home
+          </button>
+
+          <button
+            className="track-btn"
+            onClick={() => setPage("track")}
+          >
+            📦 Track Order
+          </button>
+
+        </div>
+
+      </div>
+
     </div>
   );
 }
 if (page === "checkout") {
   return (
     <div className="product-page">
+
       <button onClick={() => setPage("cart")}>
         ⬅ Back to Cart
       </button>
 
       <h1>📦 Checkout</h1>
+
       <div className="order-info">
 
-  <div className="info-item">
-    <span>🆔 Order ID</span>
-    <strong>{orderNumber}</strong>
-  </div>
+        <div className="info-item">
+          <span>🆔 Order ID</span>
+          <strong>{orderNumber}</strong>
+        </div>
 
-  <div className="info-item">
-    <span>🗓️ Date</span>
-    <strong>
-      {new Date().toLocaleDateString("en-IN", {
-        day: "2-digit",
-        month: "long",
-        year: "numeric",
-      })}
-    </strong>
-  </div>
+        <div className="info-item">
+          <span>🗓️ Date</span>
+          <strong>
+            {new Date().toLocaleDateString("en-IN", {
+              day: "2-digit",
+              month: "long",
+              year: "numeric",
+            })}
+          </strong>
+        </div>
 
-  
+        <div className="info-item">
+          <span>⏰ Order Time</span>
+          <strong>
+            {new Date().toLocaleTimeString("en-IN", {
+              hour: "2-digit",
+              minute: "2-digit",
+            })}
+          </strong>
+        </div>
 
-</div>
-      <div className="order-date">
-        <div className="order-info">
-  
+      </div>
 
-  <div className="info-item">
-    <span>⏰ Order Time</span>
-    <strong>
-      {new Date().toLocaleTimeString("en-IN", {
-        hour: "2-digit",
-        minute: "2-digit",
-      })}
-    </strong>
-  </div>
-</div>
-  
-</div>
-<div className="checkout-box">
-<div className="order-summary">
-<div className="payment-box">
+      <div className="checkout-box">
 
-  <h2>💳 Payment Method</h2>
+        {/* ORDER SUMMARY */}
 
-  <label>
-    <input
-      type="radio"
-      value="cod"
-      checked={paymentMethod === "cod"}
-      onChange={(e) => setPaymentMethod(e.target.value)}
-    />
-    Cash on Delivery
-  </label>
+        <div className="order-summary">
 
-  <label>
-    <input
-      type="radio"
-      value="upi"
-      checked={paymentMethod === "upi"}
-      onChange={(e) => setPaymentMethod(e.target.value)}
-    />
-    UPI Payment
-  </label>
+          <h2>🧾 Order Summary</h2>
 
-  <label>
-    <input
-      type="radio"
-      value="qr"
-      checked={paymentMethod === "qr"}
-      onChange={(e) => setPaymentMethod(e.target.value)}
-    />
-    Scan QR Code
-  </label>
+          <div className="summary-row">
+            <span>Total Items</span>
+            <span>{cartCount}</span>
+          </div>
 
-</div>
-  <h2>🧾 Order Summary</h2>
+          <div className="summary-row">
+            <span>Subtotal</span>
+            <span>₹{totalPrice}</span>
+          </div>
 
-  <div className="summary-row">
-    <span>Total Items</span>
-    <span>{cartCount}</span>
-  </div>
+          <div className="summary-row">
+            <span>Delivery Charges</span>
+            <span>
+              {totalPrice >= 500 ? "FREE" : "₹40"}
+            </span>
+          </div>
 
-  <div className="summary-row">
-    <span>Subtotal</span>
-    <span>₹{totalPrice}</span>
-  </div>
+          <hr />
 
-  <div className="summary-row">
-    <span>Delivery Charges</span>
+          <div className="summary-row total-row">
+            <span>Grand Total</span>
+            <span>
+              ₹{totalPrice >= 500 ? totalPrice : totalPrice + 40}
+            </span>
+          </div>
 
-    <span>
-      {totalPrice >= 500 ? "FREE" : "₹40"}
-    </span>
-  </div>
+        </div>
 
-  <hr />
+        {/* CUSTOMER */}
 
-  <div className="summary-row total-row">
+        <div className="customer-box">
 
-    <span>Grand Total</span>
+          <h2>👤 Customer Information</h2>
 
-    <span>
+          <input
+            type="text"
+            placeholder="Enter Your Name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            className="checkout-input"
+          />
 
-      ₹{totalPrice >= 500 ? totalPrice : totalPrice + 40}
+          {nameError && (
+            <p className="error-text">{nameError}</p>
+          )}
 
-    </span>
+          <input
+            type="tel"
+            placeholder="Enter Mobile Number"
+            value={mobile}
+            onChange={(e) => setMobile(e.target.value)}
+            className="checkout-input"
+          />
 
-  </div>
+          {mobileError && (
+            <p className="error-text">{mobileError}</p>
+          )}
 
-</div>
-<h2>👤 Customer Information</h2>
+          <textarea
+            rows="5"
+            placeholder="Enter Delivery Address"
+            value={address}
+            onChange={(e) => setAddress(e.target.value)}
+            className="checkout-textarea"
+          ></textarea>
 
+          {addressError && (
+            <p className="error-text">{addressError}</p>
+          )}
 
+        </div>
 
-<br /><br />
+        {/* PAYMENT */}
 
-<input
-  type="text"
-  placeholder="Enter Your Name"
-  value={name}
-  onChange={(e) => setName(e.target.value)}
-/>
-{nameError && <p className="error-text">{nameError}</p>}
+        <div className="payment-box">
 
+          <h2>💳 Payment Method</h2>
 
-<input
-  type="tel"
-  placeholder="Enter Mobile Number"
-  value={mobile}
-  onChange={(e) => setMobile(e.target.value)}
-/>
-{mobileError && <p className="error-text">{mobileError}</p>}
+          <label>
+            <input
+              type="radio"
+              value="cod"
+              checked={paymentMethod === "cod"}
+              onChange={(e) => setPaymentMethod(e.target.value)}
+            />
+            Cash on Delivery
+          </label>
 
+          <label>
+            <input
+              type="radio"
+              value="upi"
+              checked={paymentMethod === "upi"}
+              onChange={(e) => setPaymentMethod(e.target.value)}
+            />
+            UPI Payment
+          </label>
 
-<textarea
-  placeholder="Enter Delivery Address"
-  rows="4"
-  cols="40"
-  value={address}
-  onChange={(e) => setAddress(e.target.value)}
-></textarea>
-{addressError && <p className="error-text">{addressError}</p>}
-</div>
-<div className="order-summary">
+          <label>
+            <input
+              type="radio"
+              value="qr"
+              checked={paymentMethod === "qr"}
+              onChange={(e) => setPaymentMethod(e.target.value)}
+            />
+            Scan QR Code
+          </label>
 
- 
-  
+        </div>
 
-  
+      </div>
 
-</div>
-
-
-<button
-  onClick={async () => {
+      <button
+        className="place-order-btn"
+        onClick={async () => {
    if (name.trim().length < 3) {
   alert("Please enter a valid name");
   return;
@@ -434,7 +517,7 @@ ${compostCount > 0 ? `♻️ Organic Compost: ${compostCount}\n` : ""}
 const grandTotal =
   totalPrice >= 500 ? totalPrice : totalPrice + 40;
 
-const products = {
+const orderproducts = {
   rawMilk: rawMilkCount,
   buffaloMilk: buffaloMilkCount,
   paneer: paneerCount,
@@ -457,7 +540,7 @@ const { data, error } = await supabase
       customer_name: name,
       mobile: mobile,
       address: address,
-      products: products,
+      products: orderproducts,
       total: grandTotal,
       payment_method: paymentMethod,
     },
@@ -486,11 +569,7 @@ ${address}
 
     const whatsappNumber = "917895184668"; // apna number
 
-    window.open(
-      `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`,
-      "_blank"
-    );
-
+   
     setPage("success");
   }}
 >
@@ -499,6 +578,7 @@ ${address}
     </div>
   );
 }
+
 if (page === "admin") {
 
   if (!isAdminLoggedIn) {
@@ -744,58 +824,93 @@ if (page === "cart") {
   return (
     <>
    
-<header className="header-banner"></header>
+<header className="header-banner">
 
+  <div className="banner-overlay">
 
-<nav className="menu"><h3>🛒 Cart ({cartCount})</h3>
-<button
-  onClick={() => {
-    setPage("cart");
-  }}
->
-  View Cart
-</button>
+    <h1 className="banner-title">
+      🌿 FROM OUR FARMS TO YOUR FAMILY 🌿
+    </h1>
 
-  <button onClick={() => setPage("home")}>
-  Home
-</button>
-<button onClick={() => setPage("milk")}>
-  Milk</button>
+    <div className="banner-divider"></div>
 
-<button onClick={() => setPage("dairy")}>
-  Dairy Products</button>
+    <div className="banner-features">
 
-<button onClick={() => setPage("vegetables")}>
-  Vegetables</button>
+      <span>🌱 100% ORGANIC</span>
 
-<button onClick={() => setPage("fertilizer")}>
-  Fertilizers</button>
+      <span>🚜 FARM FRESH</span>
 
-  <span>|</span>
-  
+      <span>🍃 CHEMICAL FREE</span>
+
+    </div>
+
+  </div>
+
+</header>
+
+<nav className="menu">
+
+  <button
+    className="menu-icon"
+    onClick={() => setMenuOpen(!menuOpen)}
+  >
+    ☰
+  </button>
+
   <button onClick={() => setPage("contact")}>
-  Contact
-</button>
-<button onClick={() => setPage("admin")}>
-  Admin
-</button>
-<button onClick={() => setPage("track")}>
-  Track Order
-</button>
+     Contact
+  </button>
+
+  <button
+    className="cart-btn"
+    onClick={() => setPage("cart")}
+  >
+    🛒 ({cartCount})
+  </button>
+
 </nav>
 
+
+ 
+
+
+
+<div className={`side-menu ${menuOpen ? "open" : ""}`}>
+
+    <button onClick={() => setPage("home")}>🏠 Home</button>
+
+    <button onClick={() => setPage("milk")}>🥛 Milk</button>
+
+    <button onClick={() => setPage("dairy")}>🧀 Dairy Products</button>
+
+    <button onClick={() => setPage("vegetables")}>🥬 Vegetables</button>
+
+    <button onClick={() => setPage("fertilizer")}>🌾 Fertilizers</button>
+
+    <button onClick={() => setPage("track")}>📦 Track Order</button>
+
+    <button onClick={() => setPage("admin")}>🔒 Admin Login</button>
+
+  </div>
+{menuOpen && (
+  <div
+    className="menu-overlay"
+    onClick={() => setMenuOpen(false)}
+  ></div>
+)}
 <SearchBar
   search={search}
   setSearch={setSearch}
 />
 
 
-      <section className="hero">
+        <div className="home-content">
         <section className="products">
 
  {search === "" ? (
 
   <>
+  
     <div className="card">
       <img src={milk} alt="Milk" />
       <h3>Fresh Milk</h3>
@@ -852,7 +967,7 @@ if (page === "cart") {
   
 
 </section>
-
+</div>
         <h2>Pure & Natural Farm Products</h2>
 
         <p>
@@ -860,7 +975,7 @@ if (page === "cart") {
         </p>
 
         
-      </section>
+      
      <footer>
   <h3>Nano Farms 🌱</h3>
   <p>Fresh Farm Products Delivered To Your Doorstep</p>

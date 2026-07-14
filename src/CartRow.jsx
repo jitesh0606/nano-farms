@@ -1,3 +1,4 @@
+import "./styles/CartRow.css";
 function CartRow({
   emoji,
   name,

@@ -1,0 +1,274 @@
+/* ==========================
+   TRACK ORDER PAGE
+========================== */
+
+.product-page{
+
+    max-width:1000px;
+
+    margin:40px auto;
+
+    padding:30px;
+
+}
+
+.product-page h1{
+
+    text-align:center;
+
+    color:#14532d;
+
+    font-size:40px;
+
+    margin-bottom:30px;
+
+}
+
+.product-page input{
+
+    width:100%;
+
+    max-width:500px;
+
+    display:block;
+
+    margin:15px auto;
+
+    padding:15px;
+
+    border:1px solid #ddd;
+
+    border-radius:12px;
+
+    font-size:16px;
+
+    outline:none;
+
+    transition:.3s;
+
+}
+
+.product-page input:focus{
+
+    border-color:#16a34a;
+
+    box-shadow:0 0 12px rgba(22,163,74,.2);
+
+}
+
+.product-page button{
+
+    display:block;
+
+    margin:20px auto;
+
+    padding:14px 30px;
+
+    border:none;
+
+    border-radius:12px;
+
+    background:linear-gradient(135deg,#166534,#22c55e);
+
+    color:white;
+
+    font-size:17px;
+
+    font-weight:600;
+
+    cursor:pointer;
+
+    transition:.3s;
+
+}
+
+.product-page button:hover{
+
+    transform:translateY(-2px);
+
+}
+
+
+/* ==========================
+   ORDER CARD
+========================== */
+
+.order-summary{
+
+    background:white;
+
+    border-radius:20px;
+
+    padding:30px;
+
+    margin:35px 0;
+
+    box-shadow:0 12px 35px rgba(0,0,0,.08);
+
+}
+
+.order-summary h3{
+
+    color:#14532d;
+
+    margin-bottom:15px;
+
+}
+
+.order-summary p{
+
+    margin:10px 0;
+
+    color:#374151;
+
+}
+
+.order-summary ul{
+
+    margin-top:15px;
+
+    padding-left:25px;
+
+}
+
+.order-summary li{
+
+    margin:8px 0;
+
+}
+
+
+/* ==========================
+   STATUS BADGES
+========================== */
+
+.status-badge{
+
+    display:inline-block;
+
+    padding:8px 18px;
+
+    border-radius:30px;
+
+    color:white;
+
+    font-weight:bold;
+
+    margin-bottom:15px;
+
+}
+
+.status-badge.pending{
+
+    background:#eab308;
+
+}
+
+.status-badge.preparing{
+
+    background:#3b82f6;
+
+}
+
+.status-badge.outfordelivery{
+
+    background:#8b5cf6;
+
+}
+
+.status-badge.delivered{
+
+    background:#16a34a;
+
+}
+
+.status-badge.cancelled{
+
+    background:#ef4444;
+
+}
+
+
+/* ==========================
+   PROGRESS BAR
+========================== */
+
+.progress-bar{
+
+    margin:25px 0;
+
+}
+
+.step{
+
+    padding:14px 18px;
+
+    margin:12px 0;
+
+    border-radius:12px;
+
+    background:#eeeeee;
+
+    color:#666;
+
+    font-weight:600;
+
+}
+
+.step.active{
+
+    background:#16a34a;
+
+    color:white;
+
+}
+
+
+/* ==========================
+   CANCEL BUTTON
+========================== */
+
+.order-summary button{
+
+    background:#dc2626;
+
+}
+
+.order-summary button:hover{
+
+    background:#b91c1c;
+
+}
+
+
+/* ==========================
+   MOBILE
+========================== */
+
+@media(max-width:768px){
+
+.product-page{
+
+padding:20px;
+
+}
+
+.product-page h1{
+
+font-size:28px;
+
+}
+
+.order-summary{
+
+padding:20px;
+
+}
+
+.product-page input{
+
+max-width:100%;
+
+}
+
+}
