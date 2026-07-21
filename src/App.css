@@ -241,6 +241,308 @@ width:100px;
 }
 
 
+.menu-icon{
+
+    width:52px;
+    height:52px;
+
+    border:none;
+
+    border-radius:14px;
+
+    background:#ffffff;
+
+    font-size:28px;
+
+    cursor:pointer;
+
+    color:#1c6b33;
+
+    box-shadow:0 8px 20px rgba(0,0,0,.08);
+
+    transition:.3s;
+
+}
+
+.menu-icon:hover{
+
+    transform:translateY(-3px);
+
+    background:#1c6b33;
+
+    color:white;
+
+}
+
+/* ===========================
+        CONTACT BUTTON
+=========================== */
+
+.contact-btn{
+
+    padding:14px 30px;
+
+    border:none;
+
+    border-radius:15px;
+
+    cursor:pointer;
+
+    background:#fff7e7;
+
+    color:#3d2b1f;
+
+    font-size:17px;
+
+    font-weight:600;
+
+    box-shadow:0 8px 20px rgba(0,0,0,.08);
+
+    transition:.3s;
+
+}
+
+.contact-btn:hover{
+
+    transform:translateY(-3px);
+
+    background:#ffe9b3;
+
+}
+
+/* ===========================
+        CART BUTTON
+=========================== */
+
+.cart-btn{
+
+    padding:14px 28px;
+
+    border:none;
+
+    border-radius:15px;
+
+    cursor:pointer;
+
+    background:linear-gradient(135deg,#1f8b41,#35c66a);
+
+    color:white;
+
+    font-size:17px;
+
+    font-weight:700;
+
+    box-shadow:0 12px 25px rgba(46,204,113,.30);
+
+    transition:.3s;
+
+}
+
+.cart-btn:hover{
+
+    transform:translateY(-3px);
+
+}
+
+/* ===========================
+        SIDE MENU
+=========================== */
+
+.side-menu{
+
+    position:fixed;
+
+    top:0;
+    left:-340px;
+
+    width:310px;
+
+    height:100vh;
+
+    background:#ffffff;
+
+    transition:.35s ease;
+
+    box-shadow:0 0 45px rgba(0,0,0,.18);
+
+    z-index:9999;
+
+    padding:30px 22px;
+
+    overflow-y:auto;
+
+    border-top-right-radius:22px;
+    border-bottom-right-radius:22px;
+
+}
+
+.side-menu.open{
+
+    left:0;
+
+}
+
+/* ===========================
+        CLOSE BUTTON
+=========================== */
+
+.close-menu{
+
+    width:42px;
+    height:42px;
+
+    float:right;
+
+    border:none;
+
+    border-radius:50%;
+
+    background:#f3f3f3;
+
+    color:#333;
+
+    font-size:22px;
+
+    cursor:pointer;
+
+    transition:.3s;
+
+}
+
+.close-menu:hover{
+
+    background:#e53935;
+
+    color:white;
+
+    transform:rotate(90deg);
+
+}
+
+/* ===========================
+        MENU TITLE
+=========================== */
+
+.side-menu h2{
+
+    margin-top:15px;
+
+    margin-bottom:30px;
+
+    color:#1b7d3d;
+
+    font-size:28px;
+
+}
+
+/* ===========================
+        MENU BUTTONS
+=========================== */
+
+.side-menu button{
+
+    width:100%;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:12px;
+
+    text-align:left;
+
+    background:#f8f8f8;
+
+    border:none;
+
+    padding:16px 18px;
+
+    margin-bottom:12px;
+
+    border-radius:14px;
+
+    font-size:17px;
+
+    font-weight:600;
+
+    color:#333;
+
+    cursor:pointer;
+
+    transition:.3s;
+
+}
+
+.side-menu button:hover{
+
+    background:linear-gradient(135deg,#198754,#2ecc71);
+
+    color:white;
+
+    transform:translateX(8px);
+
+}
+
+/* ===========================
+        SCROLLBAR
+=========================== */
+
+.side-menu::-webkit-scrollbar{
+
+    width:6px;
+
+}
+
+.side-menu::-webkit-scrollbar-thumb{
+
+    background:#198754;
+
+    border-radius:20px;
+
+}
+
+/* ===========================
+        MOBILE
+=========================== */
+
+@media(max-width:768px){
+
+.menu{
+
+    padding:15px 18px;
+
+}
+
+.menu-icon{
+
+    width:46px;
+    height:46px;
+
+    font-size:24px;
+
+}
+
+.contact-btn{
+
+    display:none;
+
+}
+
+.cart-btn{
+
+    padding:12px 18px;
+
+    font-size:15px;
+
+}
+
+.side-menu{
+
+    width:280px;
+
+}
+
+}
 /* ===========================
    MENU
 =========================== */

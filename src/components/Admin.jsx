@@ -81,19 +81,27 @@ const deliveredOrders = orders.filter(
   return (
     <div className="product-page">
 
-      <button onClick={goHome}>
-        ⬅ Back Home
-      </button>
-<button
-  onClick={async () => {
-    await supabase.auth.signOut();
-    window.location.reload();
-  }}
->
-  🔓 Logout
-</button>
-      <h1>📦 Orders</h1>
-      <div style={{ margin: "20px 0" }}>
+     <div className="admin-topbar">
+  <button className="admin-btn" onClick={goHome}>
+    ⬅ Back Home
+  </button>
+
+  <button
+    className="admin-btn logout-btn"
+    onClick={async () => {
+      await supabase.auth.signOut();
+      window.location.reload();
+    }}
+  >
+    🔓 Logout
+  </button>
+</div>
+
+<div className="admin-header">
+  <h1>🌿 Nano Farms Admin Dashboard</h1>
+  <p>Manage Orders, Revenue & Deliveries</p>
+</div>
+     <div className="search-boxes">
 
   <input
     type="text"

@@ -36,45 +36,30 @@ function Fertilizer({
         <h3>Vermicompost</h3>
         <p>₹90 / kg</p>
         <div>
-          <button
-            onClick={() => {
-              if (vermicompostCount > 0) {
-                setVermicompostCount(vermicompostCount + 1);
-                setCartCount(cartCount + 1);
-              }
-            }}
-          >
-            -
-          </button>
+  <button
+    onClick={() => {
+      if (vermicompostCount > 0) {
+        setVermicompostCount(vermicompostCount - 1);
+        setCartCount(cartCount - 1);
+      }
+    }}
+  >
+    -
+  </button>
 
-          <span style={{ margin: "0 10px" }}>
-            {vermicompostCount}
-          </span>
+  <span style={{ margin: "0 10px" }}>
+    {vermicompostCount}
+  </span>
 
-          <button
-  onClick={() => {
-    if (vermicompostCount > 0) {
-      setVermicompostCount(vermicompostCount - 1);
-      setCartCount(cartCount - 1);
-    }
-  }}
->
-  -
-</button>
-
-<span style={{ margin: "0 10px" }}>
-  {vermicompostCount}
-</span>
-
-<button
-  onClick={() => {
-    setVermicompostCount(vermicompostCount + 1);
-    setCartCount(cartCount + 1);
-  }}
->
-  +
-</button>
-        </div>
+  <button
+    onClick={() => {
+      setVermicompostCount(vermicompostCount + 1);
+      setCartCount(cartCount + 1);
+    }}
+  >
+    +
+  </button>
+</div>
       </div>
 
       <div className="card">

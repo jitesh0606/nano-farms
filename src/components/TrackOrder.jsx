@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import supabase from "../lib/supabase";
-import "../styles/TrackOrder.css";
+import "../styles/Trackorder.css";
 function TrackOrder({ goHome }) {
   const [mobile, setMobile] = useState("");
   const [orders, setOrders] = useState([]);
   const [orderId, setOrderId] = useState("");
+  const [expandedOrder, setExpandedOrder] = useState(null);
 const productNames = {
   rawMilk: "🥛 Raw Milk",
   buffaloMilk: "🐃 Buffalo Milk",
@@ -145,88 +146,107 @@ useEffect(() => {
           <h3>Status</h3>
 
 <div className="progress-bar">
-    <div
-  className={`status-badge ${
-    order.order_status
-      .replace(/\s/g, "")
-      .toLowerCase()
-  }`}
->
-  {order.order_status}
-</div>
 
-<br />
-
-<p>
-  <b>Estimated Delivery:</b>{" "}
-  {order.order_status === "Delivered"
-    ? "Delivered Successfully ✅"
-    : "Within 24 Hours"}
-</p>
-
-  <div className={`
-    step
-    ${["Pending","Preparing","Out for Delivery","Delivered"]
-      .indexOf(order.order_status) >= 0 ? "active" : ""}
-  `}>
+  <div
+    className={`step ${
+      ["Pending", "Preparing", "Out for Delivery", "Delivered"].includes(order.order_status)
+        ? "active"
+        : ""
+    }`}
+  >
     ✔ Order Placed
   </div>
 
-  <div className={`
-    step
-    ${["Preparing","Out for Delivery","Delivered"]
-      .indexOf(order.order_status) >= 0 ? "active" : ""}
-  `}>
+  <div
+    className={`step ${
+      ["Preparing", "Out for Delivery", "Delivered"].includes(order.order_status)
+        ? "active"
+        : ""
+    }`}
+  >
     👨‍🍳 Preparing
   </div>
 
-  <div className={`
-    step
-    ${["Out for Delivery","Delivered"]
-      .indexOf(order.order_status) >= 0 ? "active" : ""}
-  `}>
+  <div
+    className={`step ${
+      ["Out for Delivery", "Delivered"].includes(order.order_status)
+        ? "active"
+        : ""
+    }`}
+  >
     🚚 Out for Delivery
   </div>
 
-  <div className={`
-    step
-    ${order.order_status === "Delivered" ? "active" : ""}
-  `}>
+  <div
+    className={`step ${
+      order.order_status === "Delivered" ? "active" : ""
+    }`}
+  >
     📦 Delivered
   </div>
 
 </div>
 
-          <p><b>Payment:</b> {order.payment_method}</p>
+{/* View Details Button */}
 
-          <p><b>Total:</b> ₹{order.total}</p>
-        
-        <p><b>Ordered Items:</b></p>
-         
-        <ul style={{ textAlign: "left" }}>
-        {Object.entries(order.products)
-    .filter(([_, value]) => value > 0)
-    .map(([key, value]) => (
-      <li key={key}>
-        {productNames[key]} × {value}
-      </li>
-    ))}
-</ul>
+<button
+  onClick={() =>
+    setExpandedOrder(
+      expandedOrder === order.id ? null : order.id
+    )
+  }
+  style={{
+    background: "#166534",
+    marginTop: "15px",
+  }}
+>
+  {expandedOrder === order.id
+    ? "▲ Hide Details"
+    : "▼ View Details"}
+</button>
+
+{/* Cancel Button - Always Visible */}
+
 {(order.order_status === "Pending" ||
   order.order_status === "Preparing") && (
-
   <button
     onClick={() => cancelOrder(order.id)}
     style={{
       background: "#d32f2f",
       color: "white",
-      marginTop: "15px",
+      marginTop: "10px",
     }}
   >
     ❌ Cancel Order
   </button>
-
 )}
+
+{/* Hidden Details */}
+
+{expandedOrder === order.id && (
+  <>
+
+    <p><b>Address:</b> {order.address}</p>
+
+    <p><b>Payment:</b> {order.payment_method}</p>
+
+    <p><b>Total:</b> ₹{order.total}</p>
+
+    <p><b>Ordered Items:</b></p>
+
+    <ul style={{ textAlign: "left" }}>
+      {Object.entries(order.products)
+        .filter(([_, value]) => value > 0)
+        .map(([key, value]) => (
+          <li key={key}>
+            {productNames[key]} × {value}
+          </li>
+        ))}
+    </ul>
+
+  </>
+)}
+
         </div>
 
       ))}
