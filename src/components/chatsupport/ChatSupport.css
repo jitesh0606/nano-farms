@@ -1,0 +1,134 @@
+.chat-bubble {
+  position: fixed;
+  bottom: 25px;
+  right: 25px;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  font-size: 28px;
+  background: #2e7d32;
+  color: white;
+  box-shadow: 0 8px 20px rgba(0,0,0,.2);
+  z-index: 9999;
+  transition: .3s;
+}
+
+.chat-bubble:hover{
+  transform: scale(1.08);
+}
+
+.chat-window{
+  position: fixed;
+  bottom: 100px;
+  right: 25px;
+  width: 340px;
+  height: 480px;
+  background:#fff;
+  border-radius:18px;
+  overflow:hidden;
+  box-shadow:0 15px 40px rgba(0,0,0,.2);
+  display:flex;
+  flex-direction:column;
+  z-index:9999;
+}
+
+.chat-header{
+  background:#2e7d32;
+  color:white;
+  padding:15px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.chat-header button{
+  background:none;
+  border:none;
+  color:white;
+  font-size:18px;
+  cursor:pointer;
+}
+
+.chat-body{
+  flex:1;
+  padding:20px;
+}
+
+.chat-footer{
+  display:flex;
+  padding:12px;
+  gap:10px;
+}
+
+.chat-footer input{
+  flex:1;
+  padding:10px;
+  border-radius:8px;
+  border:1px solid #ddd;
+}
+
+.chat-footer button{
+  padding:10px 16px;
+  border:none;
+  background:#2e7d32;
+  color:white;
+  border-radius:8px;
+  cursor:pointer;
+}
+.chat-body{
+    flex:1;
+    overflow-y:auto;
+    padding:15px;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+}
+
+.customer-message{
+    align-self:flex-end;
+    background:#2e7d32;
+    color:white;
+    padding:10px 14px;
+    border-radius:15px 15px 0 15px;
+    max-width:75%;
+}
+
+.support-message{
+    align-self:flex-start;
+    background:#f1f1f1;
+    color:#222;
+    padding:10px 14px;
+    border-radius:15px 15px 15px 0;
+    max-width:75%;
+}
+.customer-form{
+    width:340px;
+    background:white;
+    padding:20px;
+    border-radius:18px;
+    position:fixed;
+    bottom:100px;
+    right:25px;
+    box-shadow:0 15px 40px rgba(0,0,0,.2);
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+    z-index:9999;
+}
+
+.customer-form input{
+    padding:12px;
+    border:1px solid #ddd;
+    border-radius:8px;
+}
+
+.customer-form button{
+    background:#2e7d32;
+    color:white;
+    border:none;
+    padding:12px;
+    border-radius:8px;
+    cursor:pointer;
+}

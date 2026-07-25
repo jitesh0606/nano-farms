@@ -38,7 +38,7 @@ import Milk from "./Milk";
 import Dairy from "./Dairy";
 import Vegetables from "./Vegetable";
 import Fertilizer from "./Fertilizer";
-
+import ChatSupport from "./components/ChatSupport/ChatSupport";
 
   function App() {
 const [menuOpen, setMenuOpen] = useState(false);
@@ -312,6 +312,7 @@ if (page === "success") {
         </div>
 
       </div>
+
 
     </div>
   );
@@ -1082,6 +1083,7 @@ Nano Farms provides fresh milk, dairy products, vegetables and organic fertilize
   <p>© 2026 Nano Farms. All Rights Reserved.</p>
 
 </footer>
+<ChatSupport />
     </>
   );
 }

@@ -20,6 +20,8 @@ const productNames = {
   neemCake: "🌿 Neem Cake",
   compost: "🍂 Compost",
 };
+const [supportMessages, setSupportMessages] = useState([]);
+const [reply, setReply] = useState({});
   const [orders, setOrders] = useState([]);
   const [selectedOrder, setSelectedOrder] = useState(null);
 const [showDetails, setShowDetails] = useState(false);
@@ -28,10 +30,10 @@ const [searchMobile, setSearchMobile] = useState("");
 const [filter, setFilter] = useState("All");
   const [search, setSearch] = useState("");
   const [orderNumber, setOrderNumber] = useState("");
-  useEffect(() => {
-    fetchOrders();
-  }, []);
-
+useEffect(() => {
+  fetchOrders();
+  fetchSupportMessages();
+}, []);
   async function fetchOrders() {
 
     const { data } = await supabase
@@ -41,7 +43,19 @@ const [filter, setFilter] = useState("All");
 
     setOrders(data || []);
   }
-  
+  async function fetchSupportMessages() {
+  const { data, error } = await supabase
+    .from("support_messages")
+    .select("*")
+    .order("created_at", { ascending: false });
+
+  console.log("Support Data:", data);
+  console.log("Support Error:", error);
+
+  if (error) return;
+
+  setSupportMessages(data || []);
+}
 async function updateStatus(id, status) {
 
   console.log("Updating", id, status);
@@ -63,6 +77,35 @@ async function updateStatus(id, status) {
   }
 
   fetchOrders();
+}
+async function sendReply(messageId) {
+  const text = reply[messageId];
+
+  if (!text?.trim()) {
+    alert("Enter a reply");
+    return;
+  }
+
+  const { error } = await supabase
+    .from("support_messages")
+    .insert([
+      {
+        sender: "admin",
+        message: text,
+      },
+    ]);
+
+  if (error) {
+    alert(error.message);
+    return;
+  }
+
+  setReply((prev) => ({
+    ...prev,
+    [messageId]: "",
+  }));
+
+  fetchSupportMessages();
 }
 const totalOrders = orders.length;
 
@@ -333,7 +376,65 @@ const deliveredOrders = orders.filter(
         </div>
 
       ))}
+  <hr style={{ margin: "40px 0" }} />
 
+<h2>💬 Customer Support Messages</h2>
+
+<div className="support-messages">
+
+  {supportMessages.length === 0 ? (
+    <p>No messages yet.</p>
+  ) : (
+    supportMessages.map((msg) => (
+      <div
+        key={msg.id}
+        style={{
+          border: "1px solid #ddd",
+          padding: "15px",
+          borderRadius: "10px",
+          marginBottom: "10px",
+          background: "#fff",
+        }}
+      >
+        <p>
+          <b>{msg.sender}</b>
+        </p>
+
+        <p>{msg.message}</p>
+
+        <small>{msg.created_at}</small>
+        <input
+  type="text"
+  placeholder="Reply..."
+  value={reply[msg.id] || ""}
+  onChange={(e) =>
+    setReply((prev) => ({
+      ...prev,
+      [msg.id]: e.target.value,
+    }))
+  }
+  style={{
+    width: "100%",
+    padding: "8px",
+    marginTop: "10px",
+    borderRadius: "6px",
+  }}
+/>
+
+<button
+  onClick={() => sendReply(msg.id)}
+  style={{
+    marginTop: "10px",
+    padding: "8px 15px",
+  }}
+>
+  Send Reply
+</button>
+      </div>
+    ))
+  )}
+
+</div>
     </div>
   );
 }
