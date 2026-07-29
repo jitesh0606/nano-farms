@@ -38,7 +38,7 @@ import Milk from "./Milk";
 import Dairy from "./Dairy";
 import Vegetables from "./Vegetable";
 import Fertilizer from "./Fertilizer";
-import ChatSupport from "./components/ChatSupport/ChatSupport";
+import ChatSupport from "./components/chatsupport/ChatSupport";
 
   function App() {
 const [menuOpen, setMenuOpen] = useState(false);
