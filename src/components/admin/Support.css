@@ -1,0 +1,500 @@
+/* ===========================================
+   SUPPORT PANEL
+=========================================== */
+
+*{
+    box-sizing:border-box;
+}
+
+.support-container{
+
+    width:100%;
+    height:100%;
+
+    display:flex;
+
+    overflow:hidden;
+
+    background:#ffffff;
+
+    border-radius:18px;
+}
+
+/* ===========================================
+   SIDEBAR
+=========================================== */
+
+.support-sidebar{
+
+    width:220px;
+
+    min-width:220px;
+
+    background:#ffffff;
+
+    border-right:1px solid #ececec;
+
+    display:flex;
+
+    flex-direction:column;
+
+    overflow:hidden;
+}
+
+/* HEADER */
+
+.sidebar-header{
+
+    height:72px;
+
+    background:#2E7D32;
+
+    color:#fff;
+
+    display:flex;
+
+    align-items:center;
+
+    padding:0 22px;
+
+    flex-shrink:0;
+}
+
+.sidebar-header h2{
+
+    margin:0;
+
+    font-size:24px;
+
+    font-weight:700;
+}
+
+/* CUSTOMER LIST */
+
+.customer-list{
+
+    flex:1;
+
+    overflow-y:auto;
+
+    overflow-x:hidden;
+
+    background:#fff;
+}
+
+.customer-list::-webkit-scrollbar{
+
+    width:6px;
+}
+
+.customer-list::-webkit-scrollbar-thumb{
+
+    background:#d5d5d5;
+
+    border-radius:20px;
+}
+
+.empty-customers{
+
+    padding:30px;
+
+    text-align:center;
+
+    color:#777;
+}
+
+/* CUSTOMER CARD */
+
+.customer-item{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:14px;
+
+    padding:16px;
+
+    cursor:pointer;
+
+    transition:.25s;
+
+    border-bottom:1px solid #f2f2f2;
+}
+
+.customer-item:hover{
+
+    background:#f5fff6;
+}
+
+.customer-item.active{
+
+    background:#e7f6e8;
+
+    border-left:5px solid #2E7D32;
+}
+
+.customer-avatar{
+
+    width:46px;
+
+    height:46px;
+
+    border-radius:50%;
+
+    background:#e8f5e9;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    font-size:22px;
+
+    flex-shrink:0;
+}
+
+.customer-info{
+
+    flex:1;
+
+    overflow:hidden;
+}
+
+.customer-name{
+
+    font-weight:700;
+
+    font-size:15px;
+
+    color:#222;
+}
+
+.customer-id{
+
+    margin-top:4px;
+
+    color:#777;
+
+    font-size:12px;
+
+    white-space:nowrap;
+
+    overflow:hidden;
+
+    text-overflow:ellipsis;
+}
+
+/* ===========================================
+   CHAT
+=========================================== */
+
+.support-chat{
+
+    flex:1;
+
+    display:flex;
+
+    flex-direction:column;
+
+    min-width:0;
+
+    background:#f7faf8;
+}
+
+/* HEADER */
+
+.chat-header{
+
+    height:72px;
+
+    background:#2E7D32;
+
+    color:#fff;
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:center;
+
+    padding:0 24px;
+
+    flex-shrink:0;
+}
+
+.chat-title{
+
+    font-size:20px;
+
+    font-weight:700;
+}
+
+.chat-subtitle{
+
+    font-size:13px;
+
+    opacity:.9;
+
+    margin-top:4px;
+}
+/* ===========================================
+   CHAT BODY
+=========================================== */
+
+.chat-body{
+
+    flex:1;
+
+    overflow-y:auto;
+
+    overflow-x:hidden;
+
+    padding:25px;
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:16px;
+
+    background:#f5f7f8;
+
+    scroll-behavior:smooth;
+}
+
+.chat-body::-webkit-scrollbar{
+
+    width:8px;
+}
+
+.chat-body::-webkit-scrollbar-thumb{
+
+    background:#d0d0d0;
+
+    border-radius:20px;
+}
+
+/* ===========================================
+   MESSAGE ROW
+=========================================== */
+
+.message-row{
+
+    width:100%;
+
+    display:flex;
+}
+
+.message-row.left{
+
+    justify-content:flex-start;
+}
+
+.message-row.right{
+
+    justify-content:flex-end;
+}
+
+/* ===========================================
+   CUSTOMER MESSAGE
+=========================================== */
+
+.customer-msg{
+
+    max-width:72%;
+
+    background:#ffffff;
+
+    color:#222;
+
+    padding:13px 18px;
+
+    border-radius:18px 18px 18px 5px;
+
+    font-size:15px;
+
+    line-height:1.5;
+
+    box-shadow:0 4px 12px rgba(0,0,0,.08);
+
+    word-break:break-word;
+}
+
+/* ===========================================
+   ADMIN MESSAGE
+=========================================== */
+
+.admin-msg{
+
+    max-width:72%;
+
+    background:#2E7D32;
+
+    color:#ffffff;
+
+    padding:13px 18px;
+
+    border-radius:18px 18px 5px 18px;
+
+    font-size:15px;
+
+    line-height:1.5;
+
+    box-shadow:0 6px 16px rgba(46,125,50,.25);
+
+    word-break:break-word;
+}
+
+/* ===========================================
+   EMPTY CHAT
+=========================================== */
+
+.empty-chat{
+
+    flex:1;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    color:#888;
+
+    font-size:18px;
+}
+
+/* ===========================================
+   FOOTER
+=========================================== */
+
+.chat-footer{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:15px;
+
+    padding:18px;
+
+    background:#ffffff;
+
+    border-top:1px solid #ececec;
+
+    flex-shrink:0;
+}
+
+.chat-footer input{
+
+    flex:1;
+
+    height:52px;
+
+    border:1px solid #d8d8d8;
+
+    border-radius:14px;
+
+    padding:0 18px;
+
+    font-size:15px;
+
+    outline:none;
+
+    transition:.25s;
+}
+
+.chat-footer input:focus{
+
+    border-color:#2E7D32;
+
+    box-shadow:0 0 0 4px rgba(46,125,50,.10);
+}
+
+.chat-footer button{
+
+    min-width:120px;
+
+    height:52px;
+
+    border:none;
+
+    border-radius:14px;
+
+    background:#2E7D32;
+
+    color:#fff;
+
+    font-size:16px;
+
+    font-weight:700;
+
+    cursor:pointer;
+
+    transition:.25s;
+}
+
+.chat-footer button:hover{
+
+    background:#1B5E20;
+
+    transform:translateY(-2px);
+}
+
+/* ===========================================
+   MOBILE
+=========================================== */
+@media (max-width:900px){
+
+.support-container{
+    width:100%;
+    height:100%;
+    flex-direction:row;
+}
+
+.support-sidebar{
+    width:95px;
+    min-width:95px;
+    overflow-y:auto;
+}
+
+.customer-info{
+    display:none;
+}
+
+.customer-avatar{
+    margin:auto;
+}
+
+.chat-header{
+    height:60px;
+}
+
+.chat-title{
+    font-size:18px;
+}
+
+.chat-subtitle{
+    font-size:11px;
+}
+
+.chat-body{
+    padding:15px;
+}
+
+.customer-msg,
+.admin-msg{
+    max-width:85%;
+}
+
+.chat-footer{
+    padding:10px;
+}
+
+.chat-footer button{
+    min-width:75px;
+}
+
+}

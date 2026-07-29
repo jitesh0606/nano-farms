@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import supabase from "../lib/supabase";
 import "../styles/Admin.css";
+import Support from "./admin/Support";
 function Admin({ goHome }) {
 
 console.log("ADMIN COMPONENT LOADED");
@@ -21,6 +22,8 @@ const productNames = {
   compost: "🍂 Compost",
 };
 const [supportMessages, setSupportMessages] = useState([]);
+const [selectedCustomer, setSelectedCustomer] = useState(null);
+const [customers, setCustomers] = useState([]);
 const [reply, setReply] = useState({});
   const [orders, setOrders] = useState([]);
   const [selectedOrder, setSelectedOrder] = useState(null);
@@ -47,14 +50,23 @@ useEffect(() => {
   const { data, error } = await supabase
     .from("support_messages")
     .select("*")
-    .order("created_at", { ascending: false });
-
-  console.log("Support Data:", data);
-  console.log("Support Error:", error);
+    .order("created_at", { ascending: true });
 
   if (error) return;
 
   setSupportMessages(data || []);
+
+  const ids = [...new Set(
+    (data || [])
+      .filter(msg => msg.customer_id)
+      .map(msg => msg.customer_id)
+  )];
+
+  setCustomers(ids);
+
+  if (!selectedCustomer && ids.length > 0) {
+    setSelectedCustomer(ids[0]);
+  }
 }
 async function updateStatus(id, status) {
 
@@ -89,11 +101,12 @@ async function sendReply(messageId) {
   const { error } = await supabase
     .from("support_messages")
     .insert([
-      {
-        sender: "admin",
-        message: text,
-      },
-    ]);
+  {
+    customer_id: selectedCustomer,
+    sender: "admin",
+    message: text,
+  },
+]);
 
   if (error) {
     alert(error.message);
@@ -121,6 +134,7 @@ const pendingOrders = orders.filter(
 const deliveredOrders = orders.filter(
   (order) => order.order_status === "Delivered"
 ).length;
+const [showSupport, setShowSupport] = useState(false);
   return (
     <div className="product-page">
 
@@ -128,7 +142,12 @@ const deliveredOrders = orders.filter(
   <button className="admin-btn" onClick={goHome}>
     ⬅ Back Home
   </button>
-
+<button
+  className="admin-btn"
+  onClick={() => setShowSupport(true)}
+>
+  💬 Support
+</button>
   <button
     className="admin-btn logout-btn"
     onClick={async () => {
@@ -271,7 +290,8 @@ const deliveredOrders = orders.filter(
 
   })
   .map((order) => (
-
+       
+       
         <div className="order-summary" key={order.id}>
 
           <h3>{order.order_number}</h3>
@@ -302,6 +322,7 @@ const deliveredOrders = orders.filter(
 >
   👁 View Details
 </button>
+
 {orders
   .filter((order) => {
 
@@ -376,67 +397,25 @@ const deliveredOrders = orders.filter(
         </div>
 
       ))}
-  <hr style={{ margin: "40px 0" }} />
+ 
+  {showSupport && (
+  <div className="support-modal">
+    <div className="support-window">
 
-<h2>💬 Customer Support Messages</h2>
+    <button
+      className="support-close"
+      onClick={() => setShowSupport(false)}
+    >
+      ✕
+    </button>
 
-<div className="support-messages">
-
-  {supportMessages.length === 0 ? (
-    <p>No messages yet.</p>
-  ) : (
-    supportMessages.map((msg) => (
-      <div
-        key={msg.id}
-        style={{
-          border: "1px solid #ddd",
-          padding: "15px",
-          borderRadius: "10px",
-          marginBottom: "10px",
-          background: "#fff",
-        }}
-      >
-        <p>
-          <b>{msg.sender}</b>
-        </p>
-
-        <p>{msg.message}</p>
-
-        <small>{msg.created_at}</small>
-        <input
-  type="text"
-  placeholder="Reply..."
-  value={reply[msg.id] || ""}
-  onChange={(e) =>
-    setReply((prev) => ({
-      ...prev,
-      [msg.id]: e.target.value,
-    }))
-  }
-  style={{
-    width: "100%",
-    padding: "8px",
-    marginTop: "10px",
-    borderRadius: "6px",
-  }}
-/>
-
-<button
-  onClick={() => sendReply(msg.id)}
-  style={{
-    marginTop: "10px",
-    padding: "8px 15px",
-  }}
->
-  Send Reply
-</button>
-      </div>
-    ))
-  )}
+    <Support />
 
 </div>
-    </div>
+  </div>
+)}
+  </div>
+
   );
 }
-
 export default Admin;

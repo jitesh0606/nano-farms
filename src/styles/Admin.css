@@ -165,20 +165,23 @@ FILTERS
 /* ===========================
 ORDER CARD
 =========================== */
-
+ .orders-grid{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
 .order-summary{
-    background:white;
-    border-radius:18px;
-    padding:22px;
-    margin-bottom:22px;
-    box-shadow:0 8px 20px rgba(0,0,0,.08);
-    transition:.3s;
+    width: 300px;      /* pehle full width le raha tha */
+    min-height: 180px; /* pehle ~650px jaisa lag raha hai */
+    padding: 16px;
 }
 
 .order-summary:hover{
-    transform:translateY(-3px);
-}
 
+    transform:translateY(-5px);
+
+    box-shadow:0 14px 30px rgba(0,0,0,.12);
+}
 .order-summary h3{
     color:#2e7d32;
     margin-bottom:12px;
@@ -336,4 +339,67 @@ RESPONSIVE
     font-size:30px;
 }
 
+}
+.support-modal{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.45);
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+      overflow:hidden;
+    backdrop-filter:blur(6px);
+
+    z-index:9999;
+}
+
+.support-window{
+    width:92%;
+    max-width:1250px;
+    height:88vh;
+
+    background:#fff;
+
+    border-radius:22px;
+
+    overflow:hidden;
+
+    display:flex;
+
+    position:relative;
+}
+
+.support-close{
+    position: absolute;
+    top: 1px;
+    right: 16px;
+
+    width: 38px;
+    height: 38px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: none;
+    border-radius: 50%;
+
+    background:transparent;
+    color: #555;
+
+    font-size: 20px;
+    font-weight: 200;
+
+    cursor: pointer;
+
+    transition: all 0.25s ease;
+
+    box-shadow: 0 3px 10px rgba(34, 3, 3, 0.018);
+}
+
+.support-close:hover{
+    background: #f5f5f5;
+    color: #e53935;
+    transform: scale(1.08);
 }

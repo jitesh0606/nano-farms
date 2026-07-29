@@ -3,7 +3,18 @@ import ChatBubble from "./ChatBubble";
 import ChatWindow from "./ChatWindow";
 import "./ChatSupport.css";
 import supabase from "../../lib/supabase";
+const getCustomerId = () => {
+  let id = localStorage.getItem("customer_id");
 
+  if (!id) {
+    id = crypto.randomUUID();
+    localStorage.setItem("customer_id", id);
+  }
+
+  return id;
+};
+
+const customerId = getCustomerId();
 const ChatSupport = () => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -11,8 +22,8 @@ const ChatSupport = () => {
     {
       id: 0,
       sender: "support",
-      text: "👋 Welcome to Nano Farms! How can we help you today?",
-    },
+      text: "👋 Welcome to Nano Farms! How can we help you today? Please share your mobile no. or order ID with us to resolve your isse at earliest",
+       },
   ]);
 
   useEffect(() => {
@@ -44,8 +55,9 @@ const ChatSupport = () => {
   async function fetchMessages() {
     const { data, error } = await supabase
       .from("support_messages")
-      .select("*")
-      .order("created_at", { ascending: true });
+.select("*")
+.eq("customer_id", customerId)
+.order("created_at", { ascending: true });
 
     if (error) {
       console.error("Fetch Error:", error);
@@ -78,12 +90,12 @@ const ChatSupport = () => {
     const { error } = await supabase
       .from("support_messages")
       .insert([
-        {
-          sender: "customer",
-          message: text,
-        },
-      ]);
-
+  {
+    customer_id: customerId,
+    sender: "customer",
+    message: text,
+  },
+]);
     if (error) {
       console.error("Insert Error:", error);
       alert(error.message);
