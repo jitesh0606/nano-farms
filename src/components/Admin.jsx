@@ -6,7 +6,7 @@ function Admin({ goHome }) {
 
 console.log("ADMIN COMPONENT LOADED");
 const productNames = {
-  rawMilk: "🥛 Raw Milk",
+  CowMilk: "🥛 Raw Milk",
   buffaloMilk: "🐃 Buffalo Milk",
   paneer: "🧀 Paneer",
   ghee: "🫙 Ghee",

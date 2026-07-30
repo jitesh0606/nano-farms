@@ -1,92 +1,81 @@
-import { useState } from "react";
+import ProductCard from "./components/ProductCard";
+
 import cowMilk from "./assets/cowmilk.png";
 import buffaloMilk from "./assets/buffalomilk.png";
 
 function Milk({
   goHome,
+
   cartCount,
   setCartCount,
+
   rawMilkCount,
   setRawMilkCount,
+
   buffaloMilkCount,
-  setBuffaloMilkCount
-}){
+  setBuffaloMilkCount,
+}) {
+
+  const milkProducts = [
+    {
+      image: cowMilk,
+      name: "Raw Milk",
+      badge: "🥛 Fresh",
+      rating: 4.9,
+      price: 80,
+      count: rawMilkCount,
+      setCount: setRawMilkCount,
+    },
+    {
+      image: buffaloMilk,
+      name: "Raw Buffalo Milk",
+      badge: "⭐ Premium",
+      rating: 4.8,
+      price: 90,
+      count: buffaloMilkCount,
+      setCount: setBuffaloMilkCount,
+    },
+  ];
 
   return (
     <div className="product-page">
 
-      <button onClick={goHome}>
+      <button
+        className="back-button"
+        onClick={goHome}
+      >
         ⬅ Back to Home
       </button>
 
-      <h2>🛒 Cart ({cartCount})</h2>
-      <h1>Milk Products</h1>
+      <h2 className="cart-heading">
+        🛒 Cart ({cartCount})
+      </h2>
+
+      <h1 className="page-title">
+        🥛 Milk Products
+      </h1>
 
       <div className="products">
 
-        <div className="card">
-          <img src={cowMilk} alt="Raw Milk" />
-          <h3>Raw Milk</h3>
-          <p>₹80 / Litre</p>
+        {milkProducts.map((product, index) => (
 
-          <div>
-            <button
-  onClick={() => {
-    if(rawMilkCount > 0){
-      setRawMilkCount(rawMilkCount - 1);
-      setCartCount(cartCount - 1);
-    }
-  }}
->
-  -
-</button>
+          <ProductCard
+            key={index}
 
-            <span style={{ margin: "0 10px" }}>
-              {rawMilkCount}
-            </span>
+            image={product.image}
+            name={product.name}
+            badge={product.badge}
+            rating={product.rating}
+            price={product.price}
 
-            <button
-  onClick={() => {
-    setRawMilkCount(rawMilkCount + 1);
-    setCartCount(cartCount + 1);
-  }}
->
-  +
-</button>
-          </div>
-        </div>
+            count={product.count}
+            setCount={product.setCount}
 
-        <div className="card">
-          <img src={buffaloMilk} alt="Raw Buffalo Milk" />
-          <h3>Raw Buffalo Milk</h3>
-          <p>₹90 / Litre</p>
+            cartCount={cartCount}
+            setCartCount={setCartCount}
+          />
 
-          <div>
-            <button
-  onClick={() => {
-    if (buffaloMilkCount > 0) {
-      setBuffaloMilkCount(buffaloMilkCount - 1);
-      setCartCount(cartCount - 1);
-    }
-  }}
->
-  -
-</button>
-
-<span style={{ margin: "0 10px" }}>
-  {buffaloMilkCount}
-</span>
-
-<button
-  onClick={() => {
-    setBuffaloMilkCount(buffaloMilkCount + 1);
-    setCartCount(cartCount + 1);
-  }}
->
-  +
-</button>
-          </div>
-        </div>
+        ))}
 
       </div>
 

@@ -63,6 +63,7 @@ const [paneerCount, setPaneerCount] = useState(0);
 const [gheeCount, setGheeCount] = useState(0);
 const [curdCount, setCurdCount] = useState(0);
 const [butterCount, setButterCount] = useState(0);
+
 const [potatoCount, setPotatoCount] = useState(0);
 const [onionCount, setOnionCount] = useState(0);
 const [tomatoCount, setTomatoCount] = useState(0);
@@ -95,7 +96,7 @@ const [addressError, setAddressError] = useState("");
 const [paymentMethod, setPaymentMethod] = useState("cod");
 const [orderNumber, setOrderNumber] = useState("");
 const products = [
-  { name: "Raw Milk", page: "milk", image: cowmilk },
+  { name: " Raw Milk", page: "milk", image: cowmilk },
   { name: "Buffalo Milk", page: "milk", image: buffalomilk },
 
   { name: "Paneer", page: "dairy", image: paneer },
@@ -495,7 +496,7 @@ if (address.trim().length < 15) {
   return;
 }
 const orderItems = `
-${rawMilkCount > 0 ? `🥛 Raw Milk: ${rawMilkCount}\n` : ""}
+${rawMilkCount > 0 ? `🥛 Raw Milk: ${CowMilkCount}\n` : ""}
 ${buffaloMilkCount > 0 ? `🐃 Buffalo Milk: ${buffaloMilkCount}\n` : ""}
 
 ${paneerCount > 0 ? `🧀 Paneer: ${paneerCount}\n` : ""}
@@ -636,7 +637,7 @@ if (page === "cart") {
 
         <CartRow
   emoji="🥛"
-  name="Raw Milk"
+  name="  Raw Milk"
   price={80}
   count={rawMilkCount}
   setCount={setRawMilkCount}

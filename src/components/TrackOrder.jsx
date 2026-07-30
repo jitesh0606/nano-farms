@@ -7,7 +7,7 @@ function TrackOrder({ goHome }) {
   const [orderId, setOrderId] = useState("");
   const [expandedOrder, setExpandedOrder] = useState(null);
 const productNames = {
-  rawMilk: "🥛 Raw Milk",
+  CowMilk: "🥛 Raw Milk",
   buffaloMilk: "🐃 Buffalo Milk",
   paneer: "🧀 Paneer",
   ghee: "🫙 Ghee",

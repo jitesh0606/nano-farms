@@ -1,3 +1,5 @@
+import ProductCard from "./components/ProductCard";
+
 import vermicompost from "./assets/vermicompost.png";
 import cowdung from "./assets/cowdung.png";
 import neemcake from "./assets/neemcake.png";
@@ -5,6 +7,7 @@ import compost from "./assets/compost.png";
 
 function Fertilizer({
   goHome,
+
   cartCount,
   setCartCount,
 
@@ -18,146 +21,92 @@ function Fertilizer({
   setNeemCakeCount,
 
   compostCount,
-  setCompostCount
-})  {
+  setCompostCount,
+}) {
+
+  const fertilizerProducts = [
+    {
+      image: vermicompost,
+      name: "Vermicompost",
+      badge: "🌱 Organic",
+      rating: 4.9,
+      price: 90,
+      count: vermicompostCount,
+      setCount: setVermicompostCount,
+    },
+    {
+      image: cowdung,
+      name: "Cow Dung Manure",
+      badge: "🐄 Natural",
+      rating: 4.8,
+      price: 90,
+      count: cowDungCount,
+      setCount: setCowDungCount,
+    },
+    {
+      image: neemcake,
+      name: "Neem Cake",
+      badge: "🌿 Premium",
+      rating: 4.9,
+      price: 100,
+      count: neemCakeCount,
+      setCount: setNeemCakeCount,
+    },
+    {
+      image: compost,
+      name: "Organic Compost",
+      badge: "♻️ Eco",
+      rating: 4.8,
+      price: 100,
+      count: compostCount,
+      setCount: setCompostCount,
+    },
+  ];
+
   return (
-  <div className="product-page">
-    <button onClick={goHome}>
-      ⬅ Back to Home
-    </button>
+    <div className="product-page">
 
-    <h2>🛒 Cart ({cartCount})</h2>
-    <h1>Organic Fertilizers</h1>
+      <button
+        className="back-button"
+        onClick={goHome}
+      >
+        ⬅ Back to Home
+      </button>
 
-    <div className="products">
+      <h2 className="cart-heading">
+        🛒 Cart ({cartCount})
+      </h2>
 
-      <div className="card">
-        <img src={vermicompost} alt="Vermicompost" />
-        <h3>Vermicompost</h3>
-        <p>₹90 / kg</p>
-        <div>
-  <button
-    onClick={() => {
-      if (vermicompostCount > 0) {
-        setVermicompostCount(vermicompostCount - 1);
-        setCartCount(cartCount - 1);
-      }
-    }}
-  >
-    -
-  </button>
+      <h1 className="page-title">
+        🌱 Organic Fertilizers
+      </h1>
 
-  <span style={{ margin: "0 10px" }}>
-    {vermicompostCount}
-  </span>
+      <div className="products">
 
-  <button
-    onClick={() => {
-      setVermicompostCount(vermicompostCount + 1);
-      setCartCount(cartCount + 1);
-    }}
-  >
-    +
-  </button>
-</div>
-      </div>
+        {fertilizerProducts.map((product, index) => (
 
-      <div className="card">
-        <img src={cowdung} alt="Cow Dung Manure" />
-        <h3>Cow Dung Manure</h3>
-         <p>₹90 / kg</p>
-        <div>
-          <button
-            onClick={() => {
-              if (cowDungCount > 0) {
-                setCowDungCount(cowDungCount + 1);
-                setCartCount(cartCount + 1);
-              }
-            }}
-          >
-            -
-          </button>
+          <ProductCard
+            key={index}
 
-          <span style={{ margin: "0 10px" }}>
-            {cowDungCount}
-          </span>
+            image={product.image}
+            name={product.name}
+            badge={product.badge}
+            rating={product.rating}
+            price={product.price}
 
-          <button
-            onClick={() => {
-              setCowDungCount(cowDungCount + 1);
-              setCartCount(cartCount + 1);
-            }}
-          >
-            +
-          </button>
-        </div>
-      </div>
+            count={product.count}
+            setCount={product.setCount}
 
-      <div className="card">
-        <img src={neemcake} alt="Neem Cake" />
-        <h3>Neem Cake</h3>
-        <p>₹100 / kg</p>
-        <div>
-          <button
-            onClick={() => {
-              if (neemCakeCount > 0) {
-                setNeemCakeCount(neemCakeCount - 1);
-                setCartCount(cartCount - 1);
-              }
-            }}
-          >
-            -
-          </button>
+            cartCount={cartCount}
+            setCartCount={setCartCount}
+          />
 
-          <span style={{ margin: "0 10px" }}>
-            {neemCakeCount}
-          </span>
+        ))}
 
-          <button
-            onClick={() => {
-              setNeemCakeCount(neemCakeCount + 1);
-              setCartCount(cartCount + 1);
-            }}
-          >
-            +
-          </button>
-        </div>
-      </div>
-
-      <div className="card">
-        <img src={compost} alt="Organic Compost" />
-        <h3>Organic Compost</h3>
-        <p>₹100 / kg</p>
-        <div>
-          <button
-            onClick={() => {
-              if (compostCount > 0) {
-                setCompostCount(compostCount - 1);
-                setCartCount(cartCount - 1);
-              }
-            }}
-          >
-            -
-          </button>
-
-          <span style={{ margin: "0 10px" }}>
-            {compostCount}
-          </span>
-
-          <button
-            onClick={() => {
-              setCompostCount(compostCount + 1);
-              setCartCount(cartCount + 1);
-            }}
-          >
-            +
-          </button>
-        </div>
       </div>
 
     </div>
-  </div>
-);
+  );
 }
 
 export default Fertilizer;

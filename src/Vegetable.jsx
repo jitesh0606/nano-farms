@@ -1,8 +1,9 @@
-
 import potato from "./assets/potato.png";
 import onion from "./assets/onion.png";
 import tomato from "./assets/tomato.png";
 import ginger from "./assets/ginger.png";
+
+import ProductCard from "./components/ProductCard";
 
 function Vegetables({
   goHome,
@@ -21,143 +22,85 @@ function Vegetables({
   gingerCount,
   setGingerCount,
 }) {
-  return (
+
+  const vegetableProducts = [
+    {
+      id: 1,
+      name: "Potato",
+      image: potato,
+      rating: 4.9,
+      badge: "🔥 Best Seller",
+      price: 50,
+      count: potatoCount,
+      setCount: setPotatoCount,
+    },
+
+    {
+      id: 2,
+      name: "Onion",
+      image: onion,
+      rating: 4.8,
+      badge: "🌿 Organic",
+      price: 50,
+      count: onionCount,
+      setCount: setOnionCount,
+    },
+
+    {
+      id: 3,
+      name: "Tomato",
+      image: tomato,
+      rating: 4.7,
+      badge: "🥬 Fresh",
+      price: 70,
+      count: tomatoCount,
+      setCount: setTomatoCount,
+    },
+
+    {
+      id: 4,
+      name: "Ginger",
+      image: ginger,
+      rating: 4.9,
+      badge: "⭐ Premium",
+      price: 30,
+      count: gingerCount,
+      setCount: setGingerCount,
+    },
+  ];
+
+return (
   <div className="product-page">
+
     <button onClick={goHome}>
       ⬅ Back to Home
     </button>
 
     <h2>🛒 Cart ({cartCount})</h2>
+
     <h1>Fresh Vegetables</h1>
 
     <div className="products">
 
-      <div className="card">
-        <img src={potato} alt="Potato" />
-        <h3>Potato</h3>
-        <p>₹50 / kg</p>
+      {vegetableProducts.map((product) => (
 
-        <div>
-          <button
-            onClick={() => {
-              if (potatoCount > 0) {
-                setPotatoCount(potatoCount - 1);
-                setCartCount(cartCount - 1);
-              }
-            }}
-          >
-            -
-          </button>
+        <ProductCard
+          key={product.id}
+          image={product.image}
+          name={product.name}
+          rating={product.rating}
+          badge={product.badge}
+          price={product.price}
+          count={product.count}
+          setCount={product.setCount}
+          cartCount={cartCount}
+          setCartCount={setCartCount}
+        />
 
-          <span style={{ margin: "0 10px" }}>
-            {potatoCount}
-          </span>
-
-          <button
-            onClick={() => {
-              setPotatoCount(potatoCount + 1);
-              setCartCount(cartCount + 1);
-            }}
-          >
-            +
-          </button>
-        </div>
-      </div>
-
-      <div className="card">
-        <img src={onion} alt="Onion" />
-        <h3>Onion</h3>
-        <p>₹50 / kg</p>
-        <div>
-          <button
-            onClick={() => {
-              if (onionCount > 0) {
-                setOnionCount(onionCount - 1);
-                setCartCount(cartCount - 1);
-              }
-            }}
-          >
-            -
-          </button>
-
-          <span style={{ margin: "0 10px" }}>
-            {onionCount}
-          </span>
-
-          <button
-            onClick={() => {
-              setOnionCount(onionCount + 1);
-              setCartCount(cartCount + 1);
-            }}
-          >
-            +
-          </button>
-        </div>
-      </div>
-
-      <div className="card">
-        <img src={tomato} alt="Tomato" />
-        <h3>Tomato</h3>
-        <p>₹70 / kg</p>
-        <div>
-          <button
-            onClick={() => {
-              if (tomatoCount > 0) {
-                setTomatoCount(tomatoCount - 1);
-                setCartCount(cartCount - 1);
-              }
-            }}
-          >
-            -
-          </button>
-
-          <span style={{ margin: "0 10px" }}>
-            {tomatoCount}
-          </span>
-
-          <button
-            onClick={() => {
-              setTomatoCount(tomatoCount + 1);
-              setCartCount(cartCount + 1);
-            }}
-          >
-            +
-          </button>
-        </div>
-      </div>
-
-      <div className="card">
-        <img src={ginger} alt="Ginger" />
-        <h3>Ginger</h3>
-        <p>₹30 / kg</p>
-        <div>
-          <button
-            onClick={() => {
-              if (gingerCount > 0) {
-                setGingerCount(gingerCount - 1);
-                setCartCount(cartCount - 1);
-              }
-            }}
-          >
-            -
-          </button>
-
-          <span style={{ margin: "0 10px" }}>
-            {gingerCount}
-          </span>
-
-          <button
-            onClick={() => {
-              setGingerCount(gingerCount + 1);
-              setCartCount(cartCount + 1);
-            }}
-          >
-            +
-          </button>
-        </div>
-      </div>
+      ))}
 
     </div>
+
   </div>
 );
 }
