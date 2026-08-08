@@ -45,6 +45,7 @@ function Admin({ goHome }) {
   const [searchMobile, setSearchMobile] = useState("");
   const [filter, setFilter] = useState("All");
   const [loading, setLoading] = useState(true);
+  const [dateFilter, setDateFilter] = useState("all");
 
   useEffect(() => {
     fetchOrders();
@@ -169,25 +170,131 @@ function Admin({ goHome }) {
     (order) => order.order_status === "Delivered"
   ).length;
 
-  const filteredOrders = useMemo(() => {
-    return orders.filter((order) => {
-      const statusMatch =
-        filter === "All" || order.order_status === filter;
+  // =========================
+// DATE HELPERS
+// =========================
 
-      const orderNumber = String(order.order_number || "").toLowerCase();
-      const mobile = String(order.mobile || "");
+const getDateKey = (date) => {
+  if (!date) return "";
 
-      const orderMatch =
-        searchOrder.trim() === "" ||
-        orderNumber.includes(searchOrder.trim().toLowerCase());
+  const d = new Date(date);
 
-      const mobileMatch =
-        searchMobile.trim() === "" ||
-        mobile.includes(searchMobile.trim());
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
 
-      return statusMatch && orderMatch && mobileMatch;
-    });
-  }, [orders, filter, searchOrder, searchMobile]);
+  return `${year}-${month}-${day}`;
+};
+
+const getTodayKey = () => {
+  return getDateKey(new Date());
+};
+
+const getYesterdayKey = () => {
+  const date = new Date();
+  date.setDate(date.getDate() - 1);
+
+  return getDateKey(date);
+};
+
+const formatDayLabel = (dateKey, index) => {
+  const today = getTodayKey();
+  const yesterday = getYesterdayKey();
+
+  if (dateKey === today) return "Today";
+  if (dateKey === yesterday) return "Yesterday";
+
+  const date = new Date(`${dateKey}T00:00:00`);
+
+  return date.toLocaleDateString("en-IN", {
+    day: "2-digit",
+    month: "short",
+  });
+};
+
+
+// =========================
+// AVAILABLE ORDER DATES
+// =========================
+
+const availableDates = useMemo(() => {
+  const dateMap = {};
+
+  orders.forEach((order) => {
+    if (!order.created_at) return;
+
+    const dateKey = getDateKey(order.created_at);
+
+    if (!dateKey) return;
+
+    dateMap[dateKey] = (dateMap[dateKey] || 0) + 1;
+  });
+
+  return Object.entries(dateMap)
+    .sort(([dateA], [dateB]) => dateB.localeCompare(dateA))
+    .map(([date, count]) => ({
+      date,
+      count,
+    }));
+}, [orders]);
+ const filteredOrders = useMemo(() => {
+  return orders.filter((order) => {
+
+    // STATUS FILTER
+    const statusMatch =
+      filter === "All" ||
+      order.order_status === filter;
+
+
+    // ORDER NUMBER SEARCH
+    const orderNumber = String(
+      order.order_number || ""
+    ).toLowerCase();
+
+    const orderMatch =
+      searchOrder.trim() === "" ||
+      orderNumber.includes(
+        searchOrder.trim().toLowerCase()
+      );
+
+
+    // MOBILE SEARCH
+    const mobile = String(
+      order.mobile || ""
+    );
+
+    const mobileMatch =
+      searchMobile.trim() === "" ||
+      mobile.includes(
+        searchMobile.trim()
+      );
+
+
+    // DATE FILTER
+    const orderDate = getDateKey(
+      order.created_at
+    );
+
+    const dateMatch =
+      dateFilter === "all" ||
+      orderDate === dateFilter;
+
+
+    return (
+      statusMatch &&
+      orderMatch &&
+      mobileMatch &&
+      dateMatch
+    );
+  });
+
+}, [
+  orders,
+  filter,
+  searchOrder,
+  searchMobile,
+  dateFilter
+]);
 
   const formatDate = (date) => {
     if (!date) return "—";
@@ -228,12 +335,12 @@ function Admin({ goHome }) {
     setShowDetails(true);
   };
 
-  const clearFilters = () => {
-    setSearchOrder("");
-    setSearchMobile("");
-    setFilter("All");
-  };
-
+ const clearFilters = () => {
+  setSearchOrder("");
+  setSearchMobile("");
+  setFilter("All");
+  setDateFilter("all");
+};
   return (
     <div className="admin-page">
       {/* TOP NAVIGATION */}
@@ -379,7 +486,126 @@ function Admin({ goHome }) {
           </button>
         </div>
       </section>
+    {/* =========================
+    DATE FILTER
+========================= */}
 
+<section className="date-filter-section">
+
+  <div className="date-filter-heading">
+
+    <div className="date-filter-icon">
+      📅
+    </div>
+
+    <div>
+
+      <span className="eyebrow">
+        ORDER TIMELINE
+      </span>
+
+      <h3>
+        Orders by Date
+      </h3>
+
+      <p>
+        Click a date to see all orders placed that day.
+      </p>
+
+    </div>
+
+  </div>
+
+
+  <div className="date-filter-buttons">
+
+    {/* ALL DATES */}
+
+    <button
+      type="button"
+      className={
+        dateFilter === "all"
+          ? "date-filter-card active"
+          : "date-filter-card"
+      }
+      onClick={() => setDateFilter("all")}
+    >
+
+      <div className="date-card-icon">
+        🗂️
+      </div>
+
+      <div className="date-card-content">
+
+        <strong>
+          All Dates
+        </strong>
+
+        <span>
+          {orders.length}{" "}
+          {orders.length === 1 ? "order" : "orders"}
+        </span>
+
+      </div>
+
+      <div className="date-card-arrow">
+        →
+      </div>
+
+    </button>
+
+
+    {/* ACTUAL DATES */}
+
+    {availableDates.map((item, index) => (
+
+      <button
+        type="button"
+        key={item.date}
+        className={
+          dateFilter === item.date
+            ? "date-filter-card active"
+            : "date-filter-card"
+        }
+        onClick={() => setDateFilter(item.date)}
+      >
+
+        <div className="date-card-icon">
+
+          {index === 0
+            ? "🟢"
+            : index === 1
+            ? "🟡"
+            : "📅"}
+
+        </div>
+
+
+        <div className="date-card-content">
+
+          <strong>
+            {formatDayLabel(item.date, index)}
+          </strong>
+
+          <span>
+            {item.count}{" "}
+            {item.count === 1 ? "order" : "orders"}
+          </span>
+
+        </div>
+
+
+        <div className="date-card-arrow">
+          →
+        </div>
+
+      </button>
+
+    ))}
+
+  </div>
+
+</section>
       {/* FILTERS */}
       <section className="filter-section">
         <div className="filter-title">
