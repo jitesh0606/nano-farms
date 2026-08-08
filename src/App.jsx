@@ -860,9 +860,12 @@ if (page === "cart") {
     ☰
   </button>
 
-  <button onClick={() => setPage("contact")}>
-     👉☎️Contact
-  </button>
+  <button
+  className="contact-btn"
+  onClick={() => setPage("contact")}
+>
+  ☎️ Contact
+</button>
 
   <button
     className="cart-btn"

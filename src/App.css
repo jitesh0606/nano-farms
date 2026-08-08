@@ -1051,7 +1051,7 @@ border-radius:22px;
 
 .card img{
 
-height:90px;
+height:50px;
 
 }
 
@@ -1569,4 +1569,42 @@ line-height:1.5;
 
 }
 
+}
+.contact-btn {
+  background: #22c55e;
+  color: white;
+  border: none;
+  border-radius: 50px;
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+
+  box-shadow:
+    0 0 8px rgba(34, 197, 94, 0.7),
+    0 0 20px rgba(34, 197, 94, 0.5);
+
+  transition: all 0.3s ease;
+}
+
+.contact-btn:hover {
+  background: #16a34a;
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 0 12px rgba(34, 197, 94, 0.9),
+    0 0 30px rgba(34, 197, 94, 0.7);
+}
+/* =========================
+   FIX BACK BUTTON TEXT
+========================= */
+
+.product-page > button {
+  font-size: 16px !important;
+  color: white !important;
+  line-height: 1.2 !important;
+  text-indent: 0 !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  display: block !important;
 }

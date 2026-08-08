@@ -1,421 +1,642 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import supabase from "../lib/supabase";
 import "../styles/Admin.css";
 import Support from "./admin/Support";
+
 function Admin({ goHome }) {
+  const productNames = {
+    rawMilk: "🥛 Raw Milk",
+    CowMilk: "🥛 Raw Milk",
+    buffaloMilk: "🐃 Buffalo Milk",
+    paneer: "🧀 Paneer",
+    ghee: "🫙 Ghee",
+    curd: "🥣 Curd",
+    butter: "🧈 White Butter",
+    potato: "🥔 Potato",
+    onion: "🧅 Onion",
+    tomato: "🍅 Tomato",
+    ginger: "🫚 Ginger",
+    vermicompost: "🌱 Vermicompost",
+    cowDung: "🐄 Cow Dung",
+    neemCake: "🌿 Neem Cake",
+    compost: "🍂 Organic Compost",
+  };
 
-console.log("ADMIN COMPONENT LOADED");
-const productNames = {
-  CowMilk: "🥛 Raw Milk",
-  buffaloMilk: "🐃 Buffalo Milk",
-  paneer: "🧀 Paneer",
-  ghee: "🫙 Ghee",
-  curd: "🥣 Curd",
-  butter: "🧈 Butter",
-  potato: "🥔 Potato",
-  onion: "🧅 Onion",
-  tomato: "🍅 Tomato",
-  ginger: "🫚 Ginger",
-  vermicompost: "🌱 Vermicompost",
-  cowDung: "🐄 Cow Dung",
-  neemCake: "🌿 Neem Cake",
-  compost: "🍂 Compost",
-};
-const [supportMessages, setSupportMessages] = useState([]);
-const [selectedCustomer, setSelectedCustomer] = useState(null);
-const [customers, setCustomers] = useState([]);
-const [reply, setReply] = useState({});
+  const statusOptions = [
+    "Pending",
+    "Preparing",
+    "Out for Delivery",
+    "Delivered",
+    "Cancelled",
+  ];
+
   const [orders, setOrders] = useState([]);
-  const [selectedOrder, setSelectedOrder] = useState(null);
-const [showDetails, setShowDetails] = useState(false);
-  const [searchOrder, setSearchOrder] = useState("");
-const [searchMobile, setSearchMobile] = useState("");
-const [filter, setFilter] = useState("All");
-  const [search, setSearch] = useState("");
-  const [orderNumber, setOrderNumber] = useState("");
-useEffect(() => {
-  fetchOrders();
-  fetchSupportMessages();
-}, []);
-  async function fetchOrders() {
+  const [supportMessages, setSupportMessages] = useState([]);
+  const [customers, setCustomers] = useState([]);
 
-    const { data } = await supabase
+  const [selectedCustomer, setSelectedCustomer] = useState(null);
+  const [reply, setReply] = useState({});
+
+  const [selectedOrder, setSelectedOrder] = useState(null);
+  const [showDetails, setShowDetails] = useState(false);
+  const [showSupport, setShowSupport] = useState(false);
+
+  const [searchOrder, setSearchOrder] = useState("");
+  const [searchMobile, setSearchMobile] = useState("");
+  const [filter, setFilter] = useState("All");
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchOrders();
+    fetchSupportMessages();
+  }, []);
+
+  async function fetchOrders() {
+    setLoading(true);
+
+    const { data, error } = await supabase
       .from("orders")
       .select("*")
       .order("created_at", { ascending: false });
 
-    setOrders(data || []);
+    if (error) {
+      console.error("Orders error:", error);
+      setOrders([]);
+    } else {
+      setOrders(data || []);
+    }
+
+    setLoading(false);
   }
+
   async function fetchSupportMessages() {
-  const { data, error } = await supabase
-    .from("support_messages")
-    .select("*")
-    .order("created_at", { ascending: true });
+    const { data, error } = await supabase
+      .from("support_messages")
+      .select("*")
+      .order("created_at", { ascending: true });
 
-  if (error) return;
+    if (error) {
+      console.error("Support messages error:", error);
+      return;
+    }
 
-  setSupportMessages(data || []);
+    const messages = data || [];
+    setSupportMessages(messages);
 
-  const ids = [...new Set(
-    (data || [])
-      .filter(msg => msg.customer_id)
-      .map(msg => msg.customer_id)
-  )];
+    const ids = [
+      ...new Set(
+        messages
+          .filter((msg) => msg.customer_id)
+          .map((msg) => msg.customer_id)
+      ),
+    ];
 
-  setCustomers(ids);
+    setCustomers(ids);
 
-  if (!selectedCustomer && ids.length > 0) {
-    setSelectedCustomer(ids[0]);
-  }
-}
-async function updateStatus(id, status) {
-
-  console.log("Updating", id, status);
-
-  const { data, error } = await supabase
-    .from("orders")
-    .update({
-      order_status: status,
-    })
-    .eq("id", id)
-    .select();
-
-  console.log("Data:", data);
-  console.log("Error:", error);
-
-  if (error) {
-    alert(error.message);
-    return;
+    if (!selectedCustomer && ids.length > 0) {
+      setSelectedCustomer(ids[0]);
+    }
   }
 
-  fetchOrders();
-}
-async function sendReply(messageId) {
-  const text = reply[messageId];
+  async function updateStatus(id, status) {
+    const { error } = await supabase
+      .from("orders")
+      .update({ order_status: status })
+      .eq("id", id);
 
-  if (!text?.trim()) {
-    alert("Enter a reply");
-    return;
+    if (error) {
+      alert(error.message);
+      return;
+    }
+
+    setOrders((prev) =>
+      prev.map((order) =>
+        order.id === id ? { ...order, order_status: status } : order
+      )
+    );
+
+    if (selectedOrder?.id === id) {
+      setSelectedOrder((prev) => ({ ...prev, order_status: status }));
+    }
   }
 
-  const { error } = await supabase
-    .from("support_messages")
-    .insert([
-  {
-    customer_id: selectedCustomer,
-    sender: "admin",
-    message: text,
-  },
-]);
+  async function sendReply(messageId) {
+    const text = reply[messageId];
 
-  if (error) {
-    alert(error.message);
-    return;
+    if (!text?.trim()) {
+      alert("Enter a reply");
+      return;
+    }
+
+    if (!selectedCustomer) {
+      alert("No customer selected");
+      return;
+    }
+
+    const { error } = await supabase.from("support_messages").insert([
+      {
+        customer_id: selectedCustomer,
+        sender: "admin",
+        message: text.trim(),
+      },
+    ]);
+
+    if (error) {
+      alert(error.message);
+      return;
+    }
+
+    setReply((prev) => ({
+      ...prev,
+      [messageId]: "",
+    }));
+
+    fetchSupportMessages();
   }
 
-  setReply((prev) => ({
-    ...prev,
-    [messageId]: "",
-  }));
+  const totalOrders = orders.length;
 
-  fetchSupportMessages();
-}
-const totalOrders = orders.length;
+  const totalRevenue = orders.reduce(
+    (sum, order) => sum + Number(order.total || 0),
+    0
+  );
 
-const totalRevenue = orders.reduce(
-  (sum, order) => sum + Number(order.total),
-  0
-);
+  const pendingOrders = orders.filter(
+    (order) => order.order_status === "Pending"
+  ).length;
 
-const pendingOrders = orders.filter(
-  (order) => order.order_status === "Pending"
-).length;
+  const deliveredOrders = orders.filter(
+    (order) => order.order_status === "Delivered"
+  ).length;
 
-const deliveredOrders = orders.filter(
-  (order) => order.order_status === "Delivered"
-).length;
-const [showSupport, setShowSupport] = useState(false);
-  return (
-    <div className="product-page">
+  const filteredOrders = useMemo(() => {
+    return orders.filter((order) => {
+      const statusMatch =
+        filter === "All" || order.order_status === filter;
 
-     <div className="admin-topbar">
-  <button className="admin-btn" onClick={goHome}>
-    ⬅ Back Home
-  </button>
-<button
-  className="admin-btn"
-  onClick={() => setShowSupport(true)}
->
-  💬 Support
-</button>
-  <button
-    className="admin-btn logout-btn"
-    onClick={async () => {
-      await supabase.auth.signOut();
-      window.location.reload();
-    }}
-  >
-    🔓 Logout
-  </button>
-</div>
+      const orderNumber = String(order.order_number || "").toLowerCase();
+      const mobile = String(order.mobile || "");
 
-<div className="admin-header">
-  <h1>🌿 Nano Farms Admin Dashboard</h1>
-  <p>Manage Orders, Revenue & Deliveries</p>
-</div>
-     <div className="search-boxes">
+      const orderMatch =
+        searchOrder.trim() === "" ||
+        orderNumber.includes(searchOrder.trim().toLowerCase());
 
-  <input
-    type="text"
-    placeholder="Search Order Number"
-    value={searchOrder}
-    onChange={(e) => setSearchOrder(e.target.value)}
-  />
+      const mobileMatch =
+        searchMobile.trim() === "" ||
+        mobile.includes(searchMobile.trim());
 
-  <br /><br />
+      return statusMatch && orderMatch && mobileMatch;
+    });
+  }, [orders, filter, searchOrder, searchMobile]);
 
-  <input
-    type="text"
-    placeholder="Search Mobile Number"
-    value={searchMobile}
-    onChange={(e) => setSearchMobile(e.target.value)}
-  />
-{showDetails && selectedOrder && (
-  <div className="popup-overlay">
-    <div className="popup-box">
+  const formatDate = (date) => {
+    if (!date) return "—";
 
-      <h2>{selectedOrder.order_number}</h2>
+    return new Date(date).toLocaleString("en-IN", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  };
 
-      <p><b>Name:</b> {selectedOrder.customer_name}</p>
+  const getStatusClass = (status) => {
+    if (!status) return "pending";
 
-      <p><b>Mobile:</b> {selectedOrder.mobile}</p>
+    return status
+      .toLowerCase()
+      .replaceAll(" ", "")
+      .replaceAll("-", "");
+  };
 
-      <p><b>Address:</b> {selectedOrder.address}</p>
+  const getOrderItems = (products) => {
+    if (!products || typeof products !== "object") {
+      return [];
+    }
 
-      <p><b>Payment:</b> {selectedOrder.payment_method}</p>
+    return Object.entries(products)
+      .filter(([, quantity]) => Number(quantity) > 0)
+      .map(([key, quantity]) => ({
+        name: productNames[key] || key,
+        quantity: Number(quantity),
+      }));
+  };
 
-      <p><b>Status:</b> {selectedOrder.order_status}</p>
-
-      <p><b>Total:</b> ₹{selectedOrder.total}</p>
-
-      <button onClick={() => setShowDetails(false)}>
-        Close
-      </button>
-
-    </div>
-  </div>
-)}
-</div>
-      <div className="filter-buttons">
-
-  <button onClick={() => setFilter("All")}>All</button>
-
-  <button onClick={() => setFilter("Pending")}>
-    Pending
-  </button>
-
-  <button onClick={() => setFilter("Preparing")}>
-    Preparing
-  </button>
-
-  <button onClick={() => setFilter("Out for Delivery")}>
-    Out for Delivery
-  </button>
-
-  <button onClick={() => setFilter("Delivered")}>
-    Delivered
-  </button>
-
-  <button onClick={() => setFilter("Cancelled")}>
-    Cancelled
-  </button>
-
-</div>
-      <div className="dashboard-cards">
-
-  <div className="dashboard-card">
-    <h3>📦 Total Orders</h3>
-    <h2>{totalOrders}</h2>
-  </div>
-
-  <div className="dashboard-card">
-    <h3>💰 Revenue</h3>
-    <h2>₹{totalRevenue}</h2>
-  </div>
-
-  <div className="dashboard-card">
-    <h3>🟡 Pending</h3>
-    <h2>{pendingOrders}</h2>
-  </div>
-
-  <div className="dashboard-card">
-    <h3>✅ Delivered</h3>
-    <h2>{deliveredOrders}</h2>
-  </div>
-
-</div>
-      <input
-  type="text"
-  placeholder="Search by Name or Mobile..."
-  value={search}
-  onChange={(e) => setSearch(e.target.value)}
-  style={{
-    width: "350px",
-    padding: "10px",
-    marginBottom: "20px",
-    borderRadius: "8px",
-    border: "1px solid #ccc",
-    fontSize: "16px"
-  }}
-/>
-
-   {orders
-  .filter((order) => {
-
-    const statusMatch =
-      filter === "All" ||
-      order.order_status === filter;
-
-    const orderMatch =
-      searchOrder === "" ||
-      order.order_number
-        .toLowerCase()
-        .includes(searchOrder.toLowerCase());
-
-    const mobileMatch =
-      searchMobile === "" ||
-      order.mobile.includes(searchMobile);
-
-    return statusMatch && orderMatch && mobileMatch;
-
-  })
-  .map((order) => (
-       
-       
-        <div className="order-summary" key={order.id}>
-
-          <h3>{order.order_number}</h3>
-
-          <p><b>Name:</b> {order.customer_name}</p>
-
-          <p><b>Mobile:</b> {order.mobile}</p>
-
-          <p><b>Total:</b> ₹{order.total}</p>
-
-          <p><b>Payment:</b> {order.payment_method}</p>
-           <p><b>Ordered Items:</b></p>
-
-<ul style={{ textAlign: "left", margin: "10px 0" }}>
-  {Object.entries(order.products)
-    .filter(([key, value]) => value > 0)
-    .map(([key, value]) => (
-     <li key={key}>
-  {productNames[key] || key} × {value}
-</li>
-    ))}
-</ul>
-<button
-  onClick={() => {
+  const openDetails = (order) => {
     setSelectedOrder(order);
     setShowDetails(true);
-  }}
->
-  👁 View Details
-</button>
+  };
 
-{orders
-  .filter((order) => {
+  const clearFilters = () => {
+    setSearchOrder("");
+    setSearchMobile("");
+    setFilter("All");
+  };
 
-    const statusMatch =
-      filter === "All" ||
-      order.order_status === filter;
+  return (
+    <div className="admin-page">
+      {/* TOP NAVIGATION */}
+      <header className="admin-topbar">
+        <div className="admin-brand">
+          <div className="admin-brand-icon">🌿</div>
 
-    const orderMatch =
-      searchOrder === "" ||
-      order.order_number
-        .toLowerCase()
-        .includes(searchOrder.toLowerCase());
-
-    const mobileMatch =
-      searchMobile === "" ||
-      order.mobile.includes(searchMobile);
-
-    return statusMatch && orderMatch && mobileMatch;
-
-  }).length === 0 && (
-
-    <h2 style={{ textAlign: "center" }}>
-      No Orders Found 😕
-    </h2>
-
-)}
-         <label><b>Status:</b></label>
-<div
-  className={`status-badge ${
-    order.order_status
-      .replace(/\s/g, "")
-      .toLowerCase()
-  }`}
->
-  {order.order_status}
-</div>
-<select
-  value={order.order_status || "Pending"}
-  onChange={(e) => {
-    alert("Changed: " + e.target.value);
-    updateStatus(order.id, e.target.value);
-  }}
-  style={{
-    width: "100%",
-    padding: "10px",
-    marginTop: "10px",
-    fontSize: "16px"
-  }}
->
-  <option value="Pending">
-    Pending
-  </option>
-
-  <option value="Preparing">
-    Preparing
-  </option>
-
-  <option value="Out for Delivery">
-    Out for Delivery
-  </option>
-
-  <option value="Delivered">
-    Delivered
-  </option>
-
-  <option value="Cancelled">
-    Cancelled
-  </option>
-
-</select>
-
+          <div>
+            <span>NANO FARMS</span>
+            <small>Admin Control Center</small>
+          </div>
         </div>
 
-      ))}
- 
-  {showSupport && (
-  <div className="support-modal">
-    <div className="support-window">
+        <div className="admin-top-actions">
+          <button className="admin-btn ghost-btn" onClick={fetchOrders}>
+            ↻ Refresh
+          </button>
 
-    <button
-      className="support-close"
-      onClick={() => setShowSupport(false)}
-    >
-      ✕
-    </button>
+          <button className="admin-btn home-btn" onClick={goHome}>
+            🏠 Back Home
+          </button>
 
-    <Support />
+          <button
+            className="admin-btn logout-btn"
+            onClick={async () => {
+              await supabase.auth.signOut();
+              window.location.reload();
+            }}
+          >
+            🔓 Logout
+          </button>
+        </div>
+      </header>
 
-</div>
-  </div>
-)}
-  </div>
+      {/* HEADER */}
+      <section className="admin-header">
+        <div>
+          <span className="eyebrow">CONTROL PANEL</span>
+          <h1>Admin Dashboard</h1>
+          <p>
+            Manage orders, monitor delivery status and handle customer
+            support from one place.
+          </p>
+        </div>
 
+        <div className="live-indicator">
+          <span></span>
+          System Online
+        </div>
+      </section>
+
+      {/* STAT CARDS */}
+      <section className="dashboard-cards">
+        <div className="dashboard-card revenue-card">
+          <div className="dashboard-icon">💰</div>
+          <div>
+            <span>Total Revenue</span>
+            <h2>₹{totalRevenue.toLocaleString("en-IN")}</h2>
+            <small>Across all orders</small>
+          </div>
+        </div>
+
+        <div className="dashboard-card orders-card">
+          <div className="dashboard-icon">📦</div>
+          <div>
+            <span>Total Orders</span>
+            <h2>{totalOrders}</h2>
+            <small>All placed orders</small>
+          </div>
+        </div>
+
+        <div className="dashboard-card pending-card">
+          <div className="dashboard-icon">⏳</div>
+          <div>
+            <span>Pending Orders</span>
+            <h2>{pendingOrders}</h2>
+            <small>Need attention</small>
+          </div>
+        </div>
+
+        <div className="dashboard-card delivered-card">
+          <div className="dashboard-icon">✅</div>
+          <div>
+            <span>Delivered</span>
+            <h2>{deliveredOrders}</h2>
+            <small>Successfully completed</small>
+          </div>
+        </div>
+      </section>
+
+      {/* SUPPORT / QUICK ACTIONS */}
+      <section className="admin-toolbar">
+        <div>
+          <h2>Order Management</h2>
+          <p>Search, filter and update customer orders.</p>
+        </div>
+
+        <button
+          className="support-open-btn"
+          onClick={() => setShowSupport(true)}
+        >
+          💬 Customer Support
+          {customers.length > 0 && (
+            <span className="support-count">{customers.length}</span>
+          )}
+        </button>
+      </section>
+
+      {/* SEARCH */}
+      <section className="search-panel">
+        <div className="search-heading">
+          <span>🔎</span>
+          <div>
+            <h3>Find an Order</h3>
+            <p>Search by order number or customer's mobile number.</p>
+          </div>
+        </div>
+
+        <div className="search-boxes">
+          <div className="input-wrap">
+            <span>🆔</span>
+            <input
+              type="text"
+              placeholder="Search Order Number"
+              value={searchOrder}
+              onChange={(e) => setSearchOrder(e.target.value)}
+            />
+          </div>
+
+          <div className="input-wrap">
+            <span>📱</span>
+            <input
+              type="text"
+              inputMode="numeric"
+              placeholder="Search Mobile Number"
+              value={searchMobile}
+              onChange={(e) => setSearchMobile(e.target.value)}
+            />
+          </div>
+
+          <button className="clear-btn" onClick={clearFilters}>
+            Clear Filters
+          </button>
+        </div>
+      </section>
+
+      {/* FILTERS */}
+      <section className="filter-section">
+        <div className="filter-title">
+          <span>📊</span>
+          <strong>Order Status</strong>
+        </div>
+
+        <div className="filter-buttons">
+          {["All", ...statusOptions].map((status) => (
+            <button
+              key={status}
+              className={filter === status ? "active" : ""}
+              onClick={() => setFilter(status)}
+            >
+              {status === "All" ? "All Orders" : status}
+            </button>
+          ))}
+        </div>
+      </section>
+
+      {/* ORDERS */}
+      <section className="orders-section">
+        <div className="section-title-row">
+          <div>
+            <span className="eyebrow">LIVE ORDERS</span>
+            <h2>Customer Orders</h2>
+          </div>
+
+          <span className="result-count">
+            {filteredOrders.length} result
+            {filteredOrders.length !== 1 ? "s" : ""}
+          </span>
+        </div>
+
+        {loading ? (
+          <div className="empty-state">
+            <div className="loading-orb">⏳</div>
+            <h3>Loading orders...</h3>
+            <p>Fetching the latest order data.</p>
+          </div>
+        ) : filteredOrders.length === 0 ? (
+          <div className="empty-state">
+            <div className="empty-icon">😕</div>
+            <h3>No Orders Found</h3>
+            <p>Try changing your search or status filter.</p>
+            <button onClick={clearFilters}>Reset Filters</button>
+          </div>
+        ) : (
+          <div className="orders-grid">
+            {filteredOrders.map((order) => {
+              const items = getOrderItems(order.products);
+              const status = order.order_status || "Pending";
+
+              return (
+                <article className="order-summary" key={order.id}>
+                  <div className="order-card-top">
+                    <div>
+                      <span className="order-label">ORDER</span>
+                      <h3>{order.order_number || "No Order ID"}</h3>
+                    </div>
+
+                    <span
+                      className={`status-badge ${getStatusClass(status)}`}
+                    >
+                      {status}
+                    </span>
+                  </div>
+
+                  <div className="customer-mini">
+                    <div className="avatar">
+                      {(order.customer_name || "C").charAt(0).toUpperCase()}
+                    </div>
+
+                    <div>
+                      <strong>{order.customer_name || "Unknown Customer"}</strong>
+                      <span>📱 {order.mobile || "No mobile"}</span>
+                    </div>
+                  </div>
+
+                  <div className="order-meta">
+                    <div>
+                      <span>Payment</span>
+                      <strong>
+                        {String(order.payment_method || "COD").toUpperCase()}
+                      </strong>
+                    </div>
+
+                    <div>
+                      <span>Total</span>
+                      <strong>₹{Number(order.total || 0).toLocaleString("en-IN")}</strong>
+                    </div>
+
+                    <div>
+                      <span>Placed</span>
+                      <strong>{formatDate(order.created_at)}</strong>
+                    </div>
+                  </div>
+
+                  <div className="items-box">
+                    <div className="items-heading">
+                      <span>🛍️ Ordered Items</span>
+                      <span>{items.length} types</span>
+                    </div>
+
+                    {items.length > 0 ? (
+                      <ul>
+                        {items.map((item) => (
+                          <li key={item.name}>
+                            <span>{item.name}</span>
+                            <b>×{item.quantity}</b>
+                          </li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <p className="no-items">No product information.</p>
+                    )}
+                  </div>
+
+                  <div className="status-control">
+                    <label htmlFor={`status-${order.id}`}>
+                      Update Status
+                    </label>
+
+                    <select
+                      id={`status-${order.id}`}
+                      value={status}
+                      onChange={(e) =>
+                        updateStatus(order.id, e.target.value)
+                      }
+                    >
+                      {statusOptions.map((option) => (
+                        <option key={option} value={option}>
+                          {option}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <button
+                    className="details-btn"
+                    onClick={() => openDetails(order)}
+                  >
+                    View Full Details →
+                  </button>
+                </article>
+              );
+            })}
+          </div>
+        )}
+      </section>
+
+      {/* ORDER DETAILS POPUP */}
+      {showDetails && selectedOrder && (
+        <div
+          className="popup-overlay"
+          onClick={() => setShowDetails(false)}
+        >
+          <div
+            className="popup-box"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              className="popup-close"
+              onClick={() => setShowDetails(false)}
+              aria-label="Close"
+            >
+              ✕
+            </button>
+
+            <div className="popup-icon">📦</div>
+
+            <span className="eyebrow">ORDER DETAILS</span>
+            <h2>{selectedOrder.order_number || "Order"}</h2>
+
+            <div className="popup-status-row">
+              <span
+                className={`status-badge ${getStatusClass(
+                  selectedOrder.order_status || "Pending"
+                )}`}
+              >
+                {selectedOrder.order_status || "Pending"}
+              </span>
+
+              <strong>
+                ₹{Number(selectedOrder.total || 0).toLocaleString("en-IN")}
+              </strong>
+            </div>
+
+            <div className="details-list">
+              <div>
+                <span>👤 Name</span>
+                <strong>{selectedOrder.customer_name || "—"}</strong>
+              </div>
+
+              <div>
+                <span>📱 Mobile</span>
+                <strong>{selectedOrder.mobile || "—"}</strong>
+              </div>
+
+              <div>
+                <span>💳 Payment</span>
+                <strong>
+                  {String(selectedOrder.payment_method || "COD").toUpperCase()}
+                </strong>
+              </div>
+
+              <div className="address-detail">
+                <span>📍 Address</span>
+                <strong>{selectedOrder.address || "—"}</strong>
+              </div>
+            </div>
+
+            <div className="popup-items">
+              <h3>Ordered Items</h3>
+
+              {getOrderItems(selectedOrder.products).map((item) => (
+                <div key={item.name}>
+                  <span>{item.name}</span>
+                  <b>×{item.quantity}</b>
+                </div>
+              ))}
+            </div>
+
+            <button
+              className="popup-main-btn"
+              onClick={() => setShowDetails(false)}
+            >
+              Close Details
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* SUPPORT MODAL */}
+      {showSupport && (
+        <div
+          className="support-modal"
+          onClick={() => setShowSupport(false)}
+        >
+          <div
+            className="support-window"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              className="support-close"
+              onClick={() => setShowSupport(false)}
+              aria-label="Close support"
+            >
+              ✕
+            </button>
+
+            <Support />
+          </div>
+        </div>
+      )}
+    </div>
   );
 }
+
 export default Admin;
